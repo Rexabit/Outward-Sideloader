@@ -6,7 +6,7 @@ using System.Collections;
 using Partiality.Modloader;
 using UnityEngine;
 using System.IO;
-using OModAPI;
+//using OModAPI;
 using SinAPI;
 
 // Credits to Elec0 for the initial framework
@@ -35,7 +35,6 @@ namespace Sideloader
 
             script = obj.AddComponent<SideLoader>();
             script._base = this;
-            script.Init();
         }
 
         public override void OnDisable()
@@ -47,9 +46,11 @@ namespace Sideloader
     public class SideLoader : MonoBehaviour
     {
         public ModBase _base;
-        private bool InitDone = false;
-        private bool Loading = false;
 
+        private int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
+        private bool Loading = false; // for coroutines
+
+        // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
         private bool SceneChangeFlag;
 
@@ -61,82 +62,88 @@ namespace Sideloader
         
         // textures
         public Dictionary<string, Texture2D> TextureData = new Dictionary<string, Texture2D>();  // FileName : data of texture files
-        public List<string> ChangedTextures = new List<string>(); // only need to change material assets once.
-
-        public void Init()
-        {
-            Log("Version" + _base.Version + " starting...", 0);
-
-            // read all folders, store all filepaths in dictionary readData
-            CheckFolders();
-        }
 
         internal void Update()
         {
-            if (!InitDone)
+            if (InitDone < 0)
             {
-                InitDone = true;
-                StartCoroutine(LoadAssets());
+                InitDone = 0;
+                StartCoroutine(Init());
             }
-            else if (CurrentScene != SceneManagerHelper.ActiveSceneName)
+            else if (InitDone > 0)
             {
-                SceneChangeFlag = true;
-            }
+                if (CurrentScene != SceneManagerHelper.ActiveSceneName)
+                {
+                    SceneChangeFlag = true;
+                }
 
-            if (Global.Lobby.PlayersInLobbyCount < 1 || !NetworkLevelLoader.Instance.IsOverallLoadingDone) { return; }
+                if (Global.Lobby.PlayersInLobbyCount < 1 || !NetworkLevelLoader.Instance.IsOverallLoadingDone) { return; }
 
-            if (SceneChangeFlag)
-            {
-                CurrentScene = SceneManagerHelper.ActiveSceneName;
-                SceneChangeFlag = false;
+                if (SceneChangeFlag)
+                {
+                    CurrentScene = SceneManagerHelper.ActiveSceneName;
+                    SceneChangeFlag = false;
 
-                StartCoroutine(ReplaceActiveAssets());
+                    StartCoroutine(ReplaceActiveAssets());
+                }
             }
         }
 
-        private IEnumerator LoadAssets()
+        private IEnumerator Init()
         {
-            float start = Time.time;
+            Log("Version " + _base.Version + " starting...", 0);
+
+            // read folders, store all file paths in FilePaths dictionary
+            CheckFolders();
+
             Log("Loading Assets...");
 
             // load texture changes
             Loading = true;
-            StartCoroutine(LoadTextures());
+            StartCoroutine(LoadTextures());            
+            while (Loading) { yield return null; } // wait for loading callback to be set to false
 
-            // wait for loading callback to be set to false
-            while (Loading) { yield return null; }
-
-            Log("Assets loaded. Time: " + (Time.time - start));
+            // load something else...
 
             // Check currently loaded assets and replace what we can
             Loading = true;
             StartCoroutine(ReplaceActiveAssets());
-
             while (Loading) { yield return null; }
 
             Log("Finished initialization.", 0);
+            InitDone = 1;
         }
+
+        // ============== ASSET REPLACEMENT ==============
 
         private IEnumerator ReplaceActiveAssets()
         {
-            // materials
-            var materials = Resources.FindObjectsOfTypeAll<Material>();
-            Log("Found " + materials.Count() + " active materials");
+            Log("Replacing active assets...");
+            float start = Time.time;
 
-            foreach (Material m in materials.Where(x => x.mainTexture != null))
+            // ============ materials ============
+            var list = Resources.FindObjectsOfTypeAll<Material>()
+                        .Where(x => x.mainTexture != null && TextureData.ContainsKey(x.mainTexture.name))
+                        .ToList();
+
+            Log(string.Format("Found {0} materials to replace.", list.Count));
+
+            int i = 0;
+            foreach (Material m in list)
             {
-                if (TextureData.ContainsKey(m.mainTexture.name))
-                {
-                    if (!ChangedTextures.Contains(m.mainTexture.name)) { ChangedTextures.Add(m.mainTexture.name); } // add to dict
+                i++; Log(string.Format("Replacing material {0} of {1}: {2}", i, list.Count, m.mainTexture.name));
 
-                    Log("Replacing material texture: " + m.mainTexture.name);
-                    m.mainTexture = TextureData[m.mainTexture.name];
-                }
+                m.mainTexture = TextureData[m.mainTexture.name];
+
+                yield return null;
             }
 
-            Log("Finished replacing active assets.", 0);
+            // ============ something else... ============
 
-            yield return null; // doesnt yield between each item, meaning this is not really a coroutine, it may as well be a void. leaving for now.
+
+            // ==============================================
+
+            Log("Active assets replaced. Time: " + (Time.time - start), 0);
             Loading = false;
         }
 
@@ -170,9 +177,12 @@ namespace Sideloader
             }
         }
 
+        // ======== textures ========
+
         private IEnumerator LoadTextures()
         {
-            Log("Reading image data...");
+            Log("Reading Texture2D data...");
+            float start = Time.time;
 
             var filesToRead = FilePaths[ResourceTypes.Texture];
 
@@ -193,6 +203,7 @@ namespace Sideloader
             }
 
             Loading = false;
+            Log("Textures loaded. Time: " + (Time.time - start), 0);
         }
 
         public static Texture2D LoadPNG(string filePath)
@@ -209,24 +220,26 @@ namespace Sideloader
             return tex;
         }
 
-        // ============== other ==============
+
+
+        // ============== Other misc functions ==============
 
         private void Log(string log, int errorLevel = -1)
         {
             log = "[SideLoader] " + log;
             if (errorLevel == 1)
             {
-                OLogger.Error(log);
+                //OLogger.Error(log);
                 Debug.LogError(log);
             }
             else if (errorLevel == 0)
             {
-                OLogger.Warning(log);
+                //OLogger.Warning(log);
                 Debug.Log(log);
             }
             else if (errorLevel == -1)
             {
-                OLogger.Log(log);
+                //OLogger.Log(log);
                 Debug.Log(log);
             }
         }
