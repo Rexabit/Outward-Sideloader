@@ -8,6 +8,7 @@ using UnityEngine;
 using System.IO;
 //using OModAPI;
 using SinAPI;
+using System.Text.RegularExpressions;
 
 // Credits to Elec0 for the initial framework
 
@@ -131,9 +132,27 @@ namespace Sideloader
             int i = 0;
             foreach (Material m in list)
             {
-                i++; Log(string.Format("Replacing material {0} of {1}: {2}", i, list.Count, m.mainTexture.name));
+                string name = m.mainTexture.name;
+                i++; Log(string.Format(" - Replacing material {0} of {1}: {2}", i, list.Count, name));
 
-                m.mainTexture = TextureData[m.mainTexture.name];
+                // set maintexture (diffuse map)
+                m.mainTexture = TextureData[name];
+
+                // ======= bump map =======
+
+                // try remove the _d suffix, if its there
+                int subindex = name.Length - 2;
+                if (subindex >= 0 && name.Substring(subindex, 2) == "_d")
+                {
+                    name = name.Substring(0, subindex);
+                }
+                name += "_n"; // add the _n (normal map)
+
+                if (TextureData.ContainsKey(name))
+                {
+                    Log("  -- Setting bump map for " + m.name);
+                    m.SetTexture("_BumpMap", TextureData[name]);
+                }
 
                 yield return null;
             }
