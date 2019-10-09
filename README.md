@@ -1,6 +1,6 @@
 # Outward-Sideloader
 
-Partiality Sideloader for Outward Assets (currently textures only)
+Partiality "Sideloader" for Outward Assets (currently *replaces* textures only)
 
 * Credits to Elec0 (https://github.com/Elec0) for the base mod
 
