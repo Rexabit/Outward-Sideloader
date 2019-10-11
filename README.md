@@ -7,7 +7,7 @@ Partiality Asset SideLoader and Replacer for Outward.
 How to use:
 
 * Put the "Resources" folder in "Outward\Mods"
-* Put "util\SinAPI.dll" in "Outward\Outward_Data\Managed\"
+* Put "SinAPI.dll" (from the util folder) in "Outward\Outward_Data\Managed\"
 * Put "SideLoader.dll" in "Outward\Mods"
 
 To replace Textures:
