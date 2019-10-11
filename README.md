@@ -18,7 +18,7 @@ To load custom asset bundles:
 * Add a reference to SideLoader.dll (from Outward\Mods\) to your project
 * Put "Using SideLoader;" at the top of your C# file
 * You can now access the SideLoader from "SL.Instance"
-* Put your AssetBundle folder (generated from your Unity Project) in the "Resources\AssetBundles\" folder.
+* Put your AssetBundle folder (generated from your Unity Project) in the "Resources\AssetBundles\" folder. It should look like "Resources\AssetBundles\yourbundlename\ [Asset files here]"
 * Before using your assets, check if the "InitDone" int is greater than 0 (SL.Instance.InitDone > 0) first.
 * SL.Instance.LoadedBundles["foldername"] will give you a list of AssetBundles in your folder
 
