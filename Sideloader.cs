@@ -52,6 +52,8 @@ namespace SideLoader
         public AssetBundleLoader BundleLoader;
         public AssetReplacer Replacer;
 
+        public CustomItemTest itemtest;
+
         public int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
         public bool Loading = false; // for coroutines
 
@@ -73,26 +75,6 @@ namespace SideLoader
 
         internal void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F6))
-            {
-                try
-                {
-                    if (CustomItemTest.CustomItem)
-                    {
-                        var test = ResourcesPrefabManager.Instance.GenerateItem("6666666");
-                        
-                        if (CharacterManager.Instance.GetFirstLocalCharacter() is Character c)
-                        {
-                            test.transform.position = c.transform.position;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log("Error generating item. " + e.Message + "\r\n" + e.StackTrace);
-                }
-            }
-
             if (InitDone < 0)
             {
                 InitDone = 0;
@@ -149,7 +131,8 @@ namespace SideLoader
 
 
             // ========= custom item test =========
-            _base.obj.AddComponent(new CustomItemTest { script = this }).Init();
+            itemtest = _base.obj.AddComponent(new CustomItemTest { script = this });
+            itemtest.LoadCustomItemTest();
             // ====================================
 
 
