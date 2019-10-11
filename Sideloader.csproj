@@ -7,8 +7,8 @@
     <ProjectGuid>{2F471166-FC47-4946-8E14-A3D63FA85BE3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sideloader</RootNamespace>
-    <AssemblyName>Sideloader</AssemblyName>
+    <RootNamespace>SideLoader</RootNamespace>
+    <AssemblyName>SideLoader</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -84,7 +84,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sideloader.cs" />
+    <Compile Include="AssetBundleLoader.cs" />
+    <Compile Include="AssetReplacer.cs" />
+    <Compile Include="CustomItemTest.cs" />
+    <Compile Include="SideLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

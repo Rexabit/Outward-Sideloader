@@ -6,24 +6,25 @@ using System.Collections;
 using Partiality.Modloader;
 using UnityEngine;
 using System.IO;
-//using OModAPI;
+using OModAPI;
 using SinAPI;
-using System.Text.RegularExpressions;
 
 // Credits to Elec0 for the initial framework
 
-namespace Sideloader
+namespace SideLoader
 {
-    public class ModBase : PartialityMod
+    public class SL : PartialityMod // the mod loader, and public class which contains the static SL.Instance (for accessing loaded assets outside this mod)
     {
-        public double version = 1.0;
-        public SideLoader script;
-        public GameObject obj;
+        public static SideLoader Instance;
 
-        public ModBase()
+        public GameObject obj;
+        public string ID = "OTW_SideLoader";
+        public double version = 1.0;
+
+        public SL()
         {
-            this.author = "Sinai and Elec0";
-            this.ModID = "Outward Sideloader";
+            this.author = "Sinai";
+            this.ModID = ID;
             this.Version = version.ToString("0.00");
         }
 
@@ -31,11 +32,11 @@ namespace Sideloader
         {
             base.OnEnable();
 
-            obj = new GameObject("OTW_SideLoader");
+            obj = new GameObject(ID);
             GameObject.DontDestroyOnLoad(obj);
 
-            script = obj.AddComponent<SideLoader>();
-            script._base = this;
+            Instance = obj.AddComponent<SideLoader>();
+            Instance._base = this;
         }
 
         public override void OnDisable()
@@ -44,28 +45,54 @@ namespace Sideloader
         }
     }
 
-    public class SideLoader : MonoBehaviour
+    public class SideLoader : MonoBehaviour // the actual SideLoader script (for internal use only). For external usage, use SL.Instance
     {
-        public ModBase _base;
+        public SL _base;
 
-        private int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
-        private bool Loading = false; // for coroutines
+        public AssetBundleLoader BundleLoader;
+        public AssetReplacer Replacer;
+
+        public int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
+        public bool Loading = false; // for coroutines
 
         // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
         private bool SceneChangeFlag;
 
         // main directory stuff
-        private readonly string loadDir = @"Mods\Resources";
+        public string loadDir = @"Mods\Resources";
         public string[] directories;
-        public string[] SupportedFolders = { ResourceTypes.Texture }; // List of supported stuff we can sideload        
-        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Category : list of files in category  
+        public string[] SupportedFolders = { ResourceTypes.Texture, ResourceTypes.AssetBundle }; // List of supported stuff we can sideload        
+        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Category : list of files in category
         
         // textures
         public Dictionary<string, Texture2D> TextureData = new Dictionary<string, Texture2D>();  // FileName : data of texture files
 
+        // asset bundles
+        public Dictionary<string, List<AssetBundle>> LoadedBundles = new Dictionary<string, List<AssetBundle>>(); //  Folder Name: list of Asset Bundles in folder
+
         internal void Update()
         {
+            if (Input.GetKeyDown(KeyCode.F6))
+            {
+                try
+                {
+                    if (CustomItemTest.CustomItem)
+                    {
+                        var test = ResourcesPrefabManager.Instance.GenerateItem("6666666");
+                        
+                        if (CharacterManager.Instance.GetFirstLocalCharacter() is Character c)
+                        {
+                            test.transform.position = c.transform.position;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log("Error generating item. " + e.Message + "\r\n" + e.StackTrace);
+                }
+            }
+
             if (InitDone < 0)
             {
                 InitDone = 0;
@@ -85,7 +112,7 @@ namespace Sideloader
                     CurrentScene = SceneManagerHelper.ActiveSceneName;
                     SceneChangeFlag = false;
 
-                    StartCoroutine(ReplaceActiveAssets());
+                    StartCoroutine(Replacer.ReplaceActiveAssets());
                 }
             }
         }
@@ -94,171 +121,90 @@ namespace Sideloader
         {
             Log("Version " + _base.Version + " starting...", 0);
 
+            // Add Components
+            BundleLoader = _base.obj.AddComponent<AssetBundleLoader>();
+            BundleLoader.script = this;
+            Replacer = _base.obj.AddComponent<AssetReplacer>();
+            Replacer.script = this;
+
             // read folders, store all file paths in FilePaths dictionary
             CheckFolders();
 
-            Log("Loading Assets...");
-
             // load texture changes
             Loading = true;
-            StartCoroutine(LoadTextures());            
+            StartCoroutine(Replacer.LoadTextures());
             while (Loading) { yield return null; } // wait for loading callback to be set to false
+
+            // load asset bundles
+            Loading = true;
+            StartCoroutine(BundleLoader.LoadAssetBundles());
+            while (Loading) { yield return null; }       
 
             // load something else...
 
             // Check currently loaded assets and replace what we can
             Loading = true;
-            StartCoroutine(ReplaceActiveAssets());
+            StartCoroutine(Replacer.ReplaceActiveAssets());
             while (Loading) { yield return null; }
+
+
+            // ========= custom item test =========
+            _base.obj.AddComponent(new CustomItemTest { script = this }).Init();
+            // ====================================
+
 
             Log("Finished initialization.", 0);
             InitDone = 1;
         }
 
-        // ============== ASSET REPLACEMENT ==============
-
-        private IEnumerator ReplaceActiveAssets()
-        {
-            Log("Replacing active assets...");
-            float start = Time.time;
-
-            // ============ materials ============
-            var list = Resources.FindObjectsOfTypeAll<Material>()
-                        .Where(x => x.mainTexture != null && TextureData.ContainsKey(x.mainTexture.name))
-                        .ToList();
-
-            Log(string.Format("Found {0} materials to replace.", list.Count));
-
-            int i = 0;
-            foreach (Material m in list)
-            {
-                string name = m.mainTexture.name;
-                i++; Log(string.Format(" - Replacing material {0} of {1}: {2}", i, list.Count, name));
-
-                // set maintexture (diffuse map)
-                m.mainTexture = TextureData[name];
-
-                // ======= bump map =======
-
-                // try remove the _d suffix, if its there
-                int subindex = name.Length - 2;
-                if (subindex >= 0 && name.Substring(subindex, 2) == "_d")
-                {
-                    name = name.Substring(0, subindex);
-                }
-                name += "_n"; // add the _n (normal map)
-
-                if (TextureData.ContainsKey(name))
-                {
-                    Log("  -- Setting bump map for " + m.name);
-                    m.SetTexture("_BumpMap", TextureData[name]);
-                }
-
-                yield return null;
-            }
-
-            // ============ something else... ============
-
-
-            // ==============================================
-
-            Log("Active assets replaced. Time: " + (Time.time - start), 0);
-            Loading = false;
-        }
-
-        // ============= FILE LOADING =============
-
         private void CheckFolders()
         {
-            Log("Loading file paths...");
-
-            foreach (string curDir in SupportedFolders)
+            int i = 0;
+            foreach (string dir in SupportedFolders)
             {
                 // Make sure we have the key initialized
-                if (!FilePaths.ContainsKey(curDir))
-                    FilePaths.Add(curDir, new List<string>());
+                if (!FilePaths.ContainsKey(dir))
+                    FilePaths.Add(dir, new List<string>());
 
-                string curPath = loadDir + @"\" + curDir;
+                string dirPath = loadDir + @"\" + dir;
 
-                if (!Directory.Exists(curPath))
+                if (!Directory.Exists(dirPath))
                     continue;
 
-                string[] files = Directory.GetFiles(curPath);
+                bool flag = dir == ResourceTypes.AssetBundle; 
 
-                // Get the names of the files without having to parse stuff
-                foreach (string s in files)
+                string[] paths = flag ? Directory.GetDirectories(dirPath) : Directory.GetFiles(dirPath);
+
+                foreach (string s in paths)
                 {
-                    FileInfo f = new FileInfo(s);
-                    FilePaths[curDir].Add(f.Name);
+                    string assetPath = flag ? new DirectoryInfo(s).Name : new FileInfo(s).Name;
+                    FilePaths[dir].Add(assetPath);
 
-                    Log(" - Added filepath: " + f.Name);
+                    i++; // add to total asset counter
                 }
             }
+
+            Log(string.Format("Found {0} total assets to load.", i));
         }
-
-        // ======== textures ========
-
-        private IEnumerator LoadTextures()
-        {
-            Log("Reading Texture2D data...");
-            float start = Time.time;
-
-            var filesToRead = FilePaths[ResourceTypes.Texture];
-
-            foreach (string file in filesToRead)
-            {
-                // Make sure the file we're trying to read actually exists (it should but who knows)
-                string fullPath = loadDir + @"\" + ResourceTypes.Texture + @"\" + file;
-                if (!File.Exists(fullPath))
-                    continue;
-
-                Texture2D texture2D = LoadPNG(fullPath);
-
-                TextureData.Add(Path.GetFileNameWithoutExtension(file), texture2D);
-
-                Log(" - Texture loaded: " + file);
-
-                yield return null;
-            }
-
-            Loading = false;
-            Log("Textures loaded. Time: " + (Time.time - start), 0);
-        }
-
-        public static Texture2D LoadPNG(string filePath)
-        {
-            Texture2D tex = null;
-            byte[] fileData;
-
-            if (File.Exists(filePath))
-            {
-                fileData = File.ReadAllBytes(filePath);
-                tex = new Texture2D(2, 2);
-                tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-            }
-            return tex;
-        }
-
-
 
         // ============== Other misc functions ==============
 
-        private void Log(string log, int errorLevel = -1)
+        public void Log(string log, int errorLevel = -1)
         {
             log = "[SideLoader] " + log;
             if (errorLevel == 1)
             {
-                //OLogger.Error(log);
+                OLogger.Error(log);
                 Debug.LogError(log);
             }
             else if (errorLevel == 0)
             {
-                //OLogger.Warning(log);
+                OLogger.Warning(log);
                 Debug.Log(log);
             }
             else if (errorLevel == -1)
             {
-                //OLogger.Log(log);
+                OLogger.Log(log);
                 Debug.Log(log);
             }
         }
@@ -267,5 +213,6 @@ namespace Sideloader
     public static class ResourceTypes
     {
         public static string Texture = "Texture2D";
+        public static string AssetBundle = "AssetBundles";
     }
 }
