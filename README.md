@@ -16,7 +16,7 @@ To replace Textures:
 
 To load custom asset bundles:
 * Add a reference to SideLoader.dll (from Outward\Mods\) to your project
-* Put "Using SL;" at the top of your C# file
+* Put "Using SideLoader;" at the top of your C# file
 * You can now access the SideLoader from "SL.Instance"
 * Put your AssetBundle folder (generated from your Unity Project) in the "Resources\AssetBundles\" folder.
 * Before using your assets, check if the "InitDone" int is greater than 0 (SL.Instance.InitDone > 0) first.
