@@ -1,6 +1,6 @@
-# Outward-Sideloader
+# Outward Sideloader
 
-Partiality Asset SideLoader and Replacer for Outward.
+## Partiality Asset SideLoader and Replacer for Outward.
 
 * Credits to Elec0 (https://github.com/Elec0) for the base mod
 
@@ -25,3 +25,9 @@ To load custom asset bundles:
 To load custom textures (for your assets):
 * Same way as replacing textures, but use your own custom name.
 * SL.Instance.TextureData["filename"] returns the Texture2D of your PNG
+
+## Custom Item Example
+
+I've included my example of how I generated a basic custom item, with a custom icon, description, name and item ID. It's not replacing any of the items in the game, this is a completely new item which works with all the game systems.
+
+To spawn the example item, press "F6" while in-game.
