@@ -132,7 +132,7 @@ namespace SideLoader
 
             // ========= custom item test =========
             itemtest = _base.obj.AddComponent(new CustomItemTest { script = this });
-            itemtest.LoadCustomItemTest();
+            itemtest.DarkBrandTest();
             // ====================================
 
 
