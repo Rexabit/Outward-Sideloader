@@ -30,8 +30,8 @@ namespace SideLoader
                         item.transform.position = c.transform.position;
                     }
 
-                    item.gameObject.SetActive(true);
-                    item.LoadedVisual.gameObject.SetActive(true);
+                    //item.gameObject.SetActive(true);
+                    //item.LoadedVisual.gameObject.SetActive(true);
                 }
             }
 
@@ -64,7 +64,10 @@ namespace SideLoader
                 SetNameAndDesc(item, name, desc);
 
                 // set visual prefab (highly specific to this item)
-                if (item.VisualPrefab.transform.Find("mdl_itm_crystalSwordBrandBroken_c") is Transform t
+                Transform newVisuals = Instantiate(item.VisualPrefab);
+                newVisuals.gameObject.SetActive(false);
+                DontDestroyOnLoad(newVisuals);
+                if (newVisuals.Find("mdl_itm_crystalSwordBrandBroken_c") is Transform t
                     && t.GetComponent<MeshRenderer>() is MeshRenderer renderer)
                 {
                     renderer.material.mainTexture = script.TextureData["MyTex2"];
