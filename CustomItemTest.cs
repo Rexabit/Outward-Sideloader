@@ -21,7 +21,9 @@ namespace SideLoader
 
         internal void Update()
         {
-            if (script.InitDone > 0 && Input.GetKeyDown(KeyCode.F6))
+            if (script.InitDone < 1) { return; }
+
+            if (Input.GetKeyDown(KeyCode.F6))
             {
                 if (ItemManager.Instance.GenerateItemNetwork(CustomItem.GetComponent<Item>().ItemID) is Item item)
                 {
@@ -29,13 +31,10 @@ namespace SideLoader
                     {
                         item.transform.position = c.transform.position;
                     }
-
-                    //item.gameObject.SetActive(true);
-                    //item.LoadedVisual.gameObject.SetActive(true);
                 }
             }
 
-            if (script.InitDone > 0 && Input.GetKeyDown(KeyCode.F5))
+            if (Input.GetKeyDown(KeyCode.F5))
             {
                 if (CharacterManager.Instance.GetFirstLocalCharacter() is Character c)
                 {
