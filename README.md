@@ -9,7 +9,7 @@ Uses Partiality - https://github.com/PartialityModding/PartialityLauncher/releas
 How to use:
 
 * Put the "Resources" folder in "Outward\Mods"
-* Put "SinAPI.dll" (from the util folder) in "Outward\Outward_Data\Managed\"
+* Put "SinAPI.dll" and "OModAPI.dll" (from the util folder) in "Outward\Outward_Data\Managed\"
 * Put "SideLoader.dll" in "Outward\Mods"
 * Enable the mod in Partiality (or BepInEx Partiality Wrapper if you use Bep) and launch the game.
 
