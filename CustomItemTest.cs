@@ -19,18 +19,6 @@ namespace SideLoader
         public static GameObject CustomItem;
         public static Recipe customRecipe;
 
-        internal void OnEnable()
-        {
-            On.RecipeManager.Load += RecipeLoadHook;
-        }
-
-        private void RecipeLoadHook(On.RecipeManager.orig_Load orig, RecipeManager self)
-        {
-            orig(self);
-
-            script.Log("Recipe manager done loading");
-        }
-
         internal void Update()
         {
             if (script.InitDone > 0 && Input.GetKeyDown(KeyCode.F6))
