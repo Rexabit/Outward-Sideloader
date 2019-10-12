@@ -72,6 +72,7 @@ namespace SideLoader
                 {
                     renderer.material.mainTexture = script.TextureData["MyTex2"];
                 }
+                item.VisualPrefab = newVisuals;
 
                 // set custom icon
                 Texture2D icon = script.TextureData["6666665_Dark Brand"];
