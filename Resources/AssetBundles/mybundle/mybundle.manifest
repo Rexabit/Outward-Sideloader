@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4910333
+CRC: 1152848823
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6d7c190f6a259c1043abebee89b97a77
+    Hash: ee686fa23a317808c3b82be67b899ea6
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 334d9d334120762616e9d15518888602
+    Hash: 3d9d8a1c5d96c116c81c51c71d1ccb1c
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -19,10 +19,14 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
 - Class: 65
   Script: {instanceID: 0}
 - Class: 135
   Script: {instanceID: 0}
 Assets:
+- Assets/mdl_itm_crystalSwordBrandBroken.asset
+- Assets/DarkBrand.prefab
 - Assets/Sphere.prefab
 Dependencies: []
