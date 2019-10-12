@@ -6,9 +6,8 @@ using UnityEngine;
 using SinAPI;
 using Localizer;
 
-// NOTE: This is just a test proof-of-concept for custom items. It is highly specific to one item I set up and needs a lot of work.
-
-// It would be better to add a reference to the SideLoader from another script, and use SL.Instance.LoadedBundles to find your asset bundle.
+// NOTE: This is just a test proof-of-concept for custom items. 
+// It is highly specific to one item I set up and needs a lot of work before it's ready for release.
 
 namespace SideLoader
 {
