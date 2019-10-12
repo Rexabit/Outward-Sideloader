@@ -23,6 +23,7 @@ namespace SideLoader
         {
             if (script.InitDone < 1) { return; }
 
+            // spawn custom item
             if (Input.GetKeyDown(KeyCode.F6))
             {
                 if (ItemManager.Instance.GenerateItemNetwork(CustomItem.GetComponent<Item>().ItemID) is Item item)
@@ -33,6 +34,8 @@ namespace SideLoader
                     }
                 }
             }
+
+            // learn custom recipe
             if (Input.GetKeyDown(KeyCode.F5))
             {
                 if (CharacterManager.Instance.GetFirstLocalCharacter() is Character c)
