@@ -33,7 +33,6 @@ namespace SideLoader
                     }
                 }
             }
-
             if (Input.GetKeyDown(KeyCode.F5))
             {
                 if (CharacterManager.Instance.GetFirstLocalCharacter() is Character c)
@@ -62,31 +61,35 @@ namespace SideLoader
                 string desc = "\"It's actually a Strange Rusted Sword.\"";
                 SetNameAndDesc(item, name, desc);
 
-                // set visual prefab (highly specific to this item)
+                // clone the visual prefab so we can modify it without affecting the original item
                 Transform newVisuals = Instantiate(item.VisualPrefab);
                 newVisuals.gameObject.SetActive(false);
                 DontDestroyOnLoad(newVisuals);
+                item.VisualPrefab = newVisuals;
+
+                // this bit is highly specific to my Dark Brand test. 
+                // I'm grabbing the main model from the Strange Rusted Sword VisualPrefab, then setting the MeshRenderer material on that model.
                 if (newVisuals.Find("mdl_itm_crystalSwordBrandBroken_c") is Transform t
                     && t.GetComponent<MeshRenderer>() is MeshRenderer renderer)
                 {
                     renderer.material.mainTexture = script.TextureData["MyTex2"];
                 }
-                item.VisualPrefab = newVisuals;
 
                 // set custom icon
                 Texture2D icon = script.TextureData["6666665_Dark Brand"];
                 Sprite newIcon = Sprite.Create(icon, new Rect(0, 0, icon.width, icon.height), Vector2.zero);
                 At.SetValue(newIcon, typeof(Item), item, "m_itemIcon");
 
-                // fix RPM dictionary
+                // fix ResourcesPrefabManager dictionary
                 if (At.GetValue(typeof(ResourcesPrefabManager), null, "ITEM_PREFABS") is Dictionary<string, Item> Items)
                 {
                     Items.Add(item.ItemID.ToString(), item);
                     At.SetValue(Items, typeof(ResourcesPrefabManager), null, "ITEM_PREFABS");
 
-                    script.Log("Added item to RPM dict.");
+                    script.Log(string.Format("Added {0} to RPM dictionary.", item.Name));
                 }
 
+                // this bit isnt necessary, just keeping track of my custom item for testing
                 CustomItem = newSword;
 
                 // ========  make a custom recipe for the item  ========
@@ -96,12 +99,12 @@ namespace SideLoader
                 recipe.SetRecipeID(66665);
                 recipe.SetRecipeIngredients(new RecipeIngredient[]
                 {
-                    new RecipeIngredient()
+                    new RecipeIngredient() // iron sword
                     {
                         ActionType = RecipeIngredient.ActionTypes.AddSpecificIngredient,
                         AddedIngredient = ResourcesPrefabManager.Instance.GetItemPrefab(2000010),
                     },
-                    new RecipeIngredient()
+                    new RecipeIngredient() // vendavel's hospitality
                     {
                         ActionType = RecipeIngredient.ActionTypes.AddSpecificIngredient,
                         AddedIngredient = ResourcesPrefabManager.Instance.GetItemPrefab(6600227),
@@ -110,6 +113,8 @@ namespace SideLoader
                 recipe.SetRecipeName("Dark Brand");
                 recipe.SetRecipeResults(item, 1);
                 recipe.Init();
+
+                DontDestroyOnLoad(recipe);
 
                 // add to recipe dictionary
                 if (At.GetValue(typeof(RecipeManager), RecipeManager.Instance, "m_recipes") is Dictionary<string, Recipe> dict
@@ -130,12 +135,12 @@ namespace SideLoader
                     script.Log("added custom recipe to dict");
                 }
 
+                // not necessary
                 customRecipe = recipe;
-                DontDestroyOnLoad(recipe);
             }
         }
 
-        public void LoadCustomItemTest()
+        public void LoadCustomItemTest() // the 'custom sphere item', just an example of using a custom mesh for item visuals.
         {
             foreach (AssetBundle bundle in script.LoadedBundles["mybundle"])
             {
