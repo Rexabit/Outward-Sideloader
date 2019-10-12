@@ -16,6 +16,8 @@ How to use:
 To replace Textures:
 * Put your texture PNG's in the "Resources\Texture2D\" folder
 * They must have the exact name that the game uses for them. Use UABE or AssetStudio to find names.
+* Currently you can edit the main texture (usually \_d for diffuse, or NO \_[letter] at the end)
+* You can also edit the \_n (normal or height map) version, but you must also include the main texture as well or no changes will be made.
 
 To load custom asset bundles:
 * Add a reference to SideLoader.dll (from Outward\Mods\) to your project
