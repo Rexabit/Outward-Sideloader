@@ -33,3 +33,5 @@ To load custom textures (for your assets):
 I've included my example of how I generated a basic custom item, with a custom icon, description, name and item ID. It's not replacing any of the items in the game, this is a completely new item which works with all the game systems.
 
 To spawn the example item, press "F6" while in-game.
+
+I've also created a custom recipe for the item. Press F5 to learn the recipe.
