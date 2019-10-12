@@ -15,6 +15,7 @@ namespace SideLoader
     {
         public SideLoader script;
 
+        // not necessary to declare your items as static objects, this was just for internal testing
         public static GameObject CustomItem;
         public static Recipe customRecipe;
 
