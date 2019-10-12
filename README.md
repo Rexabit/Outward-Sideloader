@@ -11,6 +11,7 @@ How to use:
 * Put the "Resources" folder in "Outward\Mods"
 * Put "SinAPI.dll" (from the util folder) in "Outward\Outward_Data\Managed\"
 * Put "SideLoader.dll" in "Outward\Mods"
+* Enable the mod in Partiality (or BepInEx Partiality Wrapper if you use Bep) and launch the game.
 
 To replace Textures:
 * Put your texture PNG's in the "Resources\Texture2D\" folder
