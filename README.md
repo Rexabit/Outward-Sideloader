@@ -9,7 +9,7 @@ Uses Partiality - https://github.com/PartialityModding/PartialityLauncher/releas
 How to use:
 
 * Put the "Resources" folder in "Outward\Mods"
-* Put "SinAPI.dll" and "OModAPI.dll" (from the util folder) in "Outward\Outward_Data\Managed\"
+* Put "SinAPI.dll" (from the util folder) in "Outward\Outward_Data\Managed\"
 * Put "SideLoader.dll" in "Outward\Mods"
 * Enable the mod in Partiality (or BepInEx Partiality Wrapper if you use Bep) and launch the game.
 
@@ -33,8 +33,4 @@ To load custom textures (for your assets):
 
 ## Custom Item Example
 
-I've included my example of how I generated a basic custom item, with a custom icon, description, name and item ID. It's not replacing any of the items in the game, this is a completely new item which works with all the game systems.
-
-To spawn the example item, press "F6" while in-game.
-
-I've also created a custom recipe for the item. Press F5 to learn the recipe.
+todo docs
