@@ -49,10 +49,10 @@ namespace SideLoader
     {
         public SL _base;
 
+        // components
         public AssetBundleLoader BundleLoader;
         public AssetReplacer Replacer;
-
-        public CustomItemTest itemtest;
+        public CustomItems CustomItems;
 
         public int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
         public bool Loading = false; // for coroutines
@@ -64,7 +64,12 @@ namespace SideLoader
         // main directory stuff
         public string loadDir = @"Mods\Resources";
         public string[] directories;
-        public string[] SupportedFolders = { ResourceTypes.Texture, ResourceTypes.AssetBundle }; // List of supported stuff we can sideload        
+        public string[] SupportedFolders =  // List of supported stuff we can sideload 
+        {
+            ResourceTypes.Texture,
+            ResourceTypes.AssetBundle,
+            ResourceTypes.CustomItems
+        };       
         public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Category : list of files in category
         
         // textures
@@ -101,13 +106,15 @@ namespace SideLoader
 
         private IEnumerator Init()
         {
+            //// temp test
+            //File.WriteAllText(@"Mods\Resources\CustomItems\DarkBrand.json", JsonUtility.ToJson(CustomItems.DarkBrand, true));
+
             Log("Version " + _base.Version + " starting...", 0);
 
             // Add Components
-            BundleLoader = _base.obj.AddComponent<AssetBundleLoader>();
-            BundleLoader.script = this;
-            Replacer = _base.obj.AddComponent<AssetReplacer>();
-            Replacer.script = this;
+            BundleLoader = _base.obj.AddComponent(new AssetBundleLoader { script = this });
+            Replacer = _base.obj.AddComponent(new AssetReplacer { script = this });
+            CustomItems = _base.obj.AddComponent(new CustomItems { script = this });
 
             // read folders, store all file paths in FilePaths dictionary
             CheckFolders();
@@ -120,7 +127,12 @@ namespace SideLoader
             // load asset bundles
             Loading = true;
             StartCoroutine(BundleLoader.LoadAssetBundles());
-            while (Loading) { yield return null; }       
+            while (Loading) { yield return null; }
+
+            // load custom items
+            Loading = true;
+            StartCoroutine(CustomItems.LoadItems());
+            while (Loading) { yield return null; }
 
             // load something else...
 
@@ -128,13 +140,6 @@ namespace SideLoader
             Loading = true;
             StartCoroutine(Replacer.ReplaceActiveAssets());
             while (Loading) { yield return null; }
-
-
-            // ========= custom item test =========
-            itemtest = _base.obj.AddComponent(new CustomItemTest { script = this });
-            itemtest.DarkBrandTest();
-            // ====================================
-
 
             Log("Finished initialization.", 0);
             InitDone = 1;
@@ -177,17 +182,17 @@ namespace SideLoader
             log = "[SideLoader] " + log;
             if (errorLevel == 1)
             {
-                OLogger.Error(log);
+                // OLogger.Error(log);
                 Debug.LogError(log);
             }
             else if (errorLevel == 0)
             {
-                OLogger.Warning(log);
+                // OLogger.Warning(log);
                 Debug.Log(log);
             }
             else if (errorLevel == -1)
             {
-                OLogger.Log(log);
+                // OLogger.Log(log);
                 Debug.Log(log);
             }
         }
@@ -197,5 +202,6 @@ namespace SideLoader
     {
         public static string Texture = "Texture2D";
         public static string AssetBundle = "AssetBundles";
+        public static string CustomItems = "CustomItems";
     }
 }

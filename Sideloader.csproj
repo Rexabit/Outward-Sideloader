@@ -86,7 +86,7 @@
   <ItemGroup>
     <Compile Include="AssetBundleLoader.cs" />
     <Compile Include="AssetReplacer.cs" />
-    <Compile Include="CustomItemTest.cs" />
+    <Compile Include="CustomItems.cs" />
     <Compile Include="SideLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
