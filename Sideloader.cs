@@ -106,9 +106,6 @@ namespace SideLoader
 
         private IEnumerator Init()
         {
-            //// temp test
-            //File.WriteAllText(@"Mods\Resources\CustomItems\DarkBrand.json", JsonUtility.ToJson(CustomItems.DarkBrand, true));
-
             Log("Version " + _base.Version + " starting...", 0);
 
             // Add Components

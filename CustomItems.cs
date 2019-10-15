@@ -257,7 +257,7 @@ namespace SideLoader
             }
             else
             {
-                script.Log("::CustomItems - could not find CloneTarget_ItemID \"" + template.CloneTarget_ItemID + " for template " + template.Name);
+                script.Log("::CustomItems - could not find CloneTarget_ItemID \"" + template.CloneTarget_ItemID + " for template " + template.Name, 0);
             }
         }
 
