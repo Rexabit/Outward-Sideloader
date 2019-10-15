@@ -13,7 +13,6 @@ namespace SideLoader
     public class CustomItems : MonoBehaviour
     {
         public SideLoader script;
-
         private bool Loading = false;
 
         public IEnumerator LoadItems()
@@ -25,6 +24,7 @@ namespace SideLoader
             StartCoroutine(LoadWeapons());
             while (Loading) { yield return null; }
 
+            script.Loading = false;
             script.Log("Loaded custom items", 0);
         }
 
@@ -180,7 +180,7 @@ namespace SideLoader
 
                 if (template.RecipeIngredientIDs != null && template.RecipeIngredientIDs.Count() > 0)
                 {
-                    Recipe recipe = new Recipe();
+                    Recipe recipe = ScriptableObject.CreateInstance("Recipe") as Recipe;
                     recipe.SetCraftingType(Recipe.CraftingType.Survival);
                     recipe.SetRecipeID(template.New_ItemID);
                     recipe.SetRecipeName(template.Name);
