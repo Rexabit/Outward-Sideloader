@@ -14,38 +14,6 @@ namespace SideLoader
     {
         public SideLoader script;
 
-        public static List<GameObject> LoadedItems;
-
-        //// not necessary to declare your items as static objects, this was just for internal testing
-        //public static GameObject CustomItem;
-        //public static Recipe customRecipe;
-
-        //internal void Update()
-        //{
-        //    if (script.InitDone < 1) { return; }
-
-        //    // spawn custom item
-        //    if (Input.GetKeyDown(KeyCode.F6))
-        //    {
-        //        if (ItemManager.Instance.GenerateItemNetwork(CustomItem.GetComponent<Item>().ItemID) is Item item)
-        //        {
-        //            if (CharacterManager.Instance.GetFirstLocalCharacter() is Character c)
-        //            {
-        //                item.transform.position = c.transform.position;
-        //            }
-        //        }
-        //    }
-
-        //    // learn custom recipe
-        //    if (Input.GetKeyDown(KeyCode.F5))
-        //    {
-        //        if (CharacterManager.Instance.GetFirstLocalCharacter() is Character c)
-        //        {
-        //            c.Inventory.RecipeKnowledge.LearnRecipe(customRecipe);
-        //        }
-        //    }
-        //}
-
         private bool Loading = false;
 
         public IEnumerator LoadItems()
