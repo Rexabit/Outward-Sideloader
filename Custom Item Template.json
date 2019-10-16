@@ -1,0 +1,79 @@
+{
+	// NOTE: You cannot actually leave comments in JSON files. Make a copy of this template and remove all //Comments as you fill it out.
+
+	// SETUP AND INITIALIZATION
+
+    "New_ItemID": 1234567, 			 // 7-digit UNIQUE ID for your item
+    "CloneTarget_ItemID": 2000151,   // The ID of the clone target (which item you're basing this item on)
+    "AssetBundle_Name": "mybundle",  // the FOLDER NAME of the asset bundle which contains your custom item visuals
+    "VisualPrefabName": "myvisuals", // the PREFAB NAME of your custom visuals, in any bundle inside the folder above
+    "ItemIconName": "DarkBrandIcon", // the ICON NAME (in the Texture2D folder) for your item. For "myicon.png" enter "myicon".
+	
+	// ACTUAL ITEM PARAMETERS
+	
+    "Name": "My Custom Weapon",      // Name (for GameObjects AND actual display name)
+    "Description": "Description.",   // Description
+    "Durability": 1000,              // Max Durability (int)
+    "BaseValue": 1000,               // Buy price (int)
+    "Weight": 3,                     // Weight (int)
+    "DamageBonuses": [               // Damage Bonuses array (float)
+        0.0, // 0: phys
+        0.0, // 1: ethereal
+        0.0, // 2: decay
+        0.0, // 3: lightning
+        0.0, // 4: frost
+        0.0, // 5: fire
+        0.0, // n/a
+        0.0, // n/a
+        0.0  // 8: raw
+    ],
+    "ManaUseModifier": 0.0,           // Mana cost PENALTY (float). For cost reduction, use negative values.
+	
+	// WEAPON STATS
+	
+    "AttackSpeed": 1.2,               // Attack speed (float). 1.0 is default.
+    "Impact": 25.0,                   // base Impact (float)
+	
+    "BaseDamage": {					  // :: BASE DAMAGE LIST ::
+        "m_list": [
+			// Note: Each type must be contained in a { "Type": 0-5, "Damage": 0-999+ } wrapper, separate with comma.
+            {
+                "Type": 0,			  // Damage Type (enum - see "Damage Bonuses"). 0 is Physical.
+                "Damage": 36.0        // Actual damage value (float)
+            },
+			{
+				"Type": 3,			  // optional secondary (and more if you want) damage type(s). 3 is Lightning.
+				"Damage": 15.0
+			}
+        ]
+    },
+	
+    "hitEffects": [ // a list of status effects you want the weapon to inflict. Separate with comma and newline.
+		"None"
+        // "Bleeding",
+		// "Bleeding +",
+		// "Burning",
+		// "Poisoned",
+		// "Poisoned +",
+		// "Burn",
+		// "Chill",
+		// "Curse",
+		// "Elemental Vulnerability",
+		// "Haunted",
+		// "Doom",
+		// "Pain",
+		// "Confusion",
+		// "Dizzy",
+		// "Cripped",
+		// "Slow Down",
+    ],
+	
+	// CUSTOM RECIPE
+	
+    "RecipeIngredientIDs": [ // the IDs for the custom recipe for your weapon. Don't have to use all 4, just remove unwanted lines.
+        2000150,
+        4400070,
+        6200010,
+        6400070
+    ]
+}
