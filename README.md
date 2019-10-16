@@ -8,10 +8,8 @@ Uses Partiality - https://github.com/PartialityModding/PartialityLauncher/releas
 
 How to use:
 
-* Put the "Resources" folder in "Outward\Mods"
-* Put "SinAPI.dll" (from the util folder) in "Outward\Outward_Data\Managed\"
-* Put "SideLoader.dll" in "Outward\Mods"
-* Enable the mod in Partiality (or BepInEx Partiality Wrapper if you use Bep) and launch the game.
+* Unzip the "SideLoader.zip" file in the "! Release" folder directly to your Outward installation directory.
+* That's it! Follow specific instructions below for more info.
 
 To replace Textures:
 * Put your texture PNG's in the "Resources\Texture2D\" folder
