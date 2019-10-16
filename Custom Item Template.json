@@ -15,7 +15,7 @@
     "Description": "Description.",   // Description
     "Durability": 1000,              // Max Durability (int)
     "BaseValue": 1000,               // Buy price (int)
-    "Weight": 3,                     // Weight (int)
+    "Weight": 3.0,                   // Weight (float)
     "DamageBonuses": [               // Damage Bonuses array (float)
         0.0, // 0: phys
         0.0, // 1: ethereal
