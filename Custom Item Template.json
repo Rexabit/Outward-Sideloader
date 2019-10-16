@@ -1,15 +1,15 @@
 {
-	// NOTE: You cannot actually leave comments in JSON files. Make a copy of this template and remove all //Comments as you fill it out.
+    // NOTE: You cannot actually leave comments in JSON files. Make a copy of this template and remove all //Comments as you fill it out.
 
-	// SETUP AND INITIALIZATION
+    // SETUP AND INITIALIZATION
 
-    "New_ItemID": 1234567, 			 // 7-digit UNIQUE ID for your item
+    "New_ItemID": 1234567,           // 7-digit UNIQUE ID for your item
     "CloneTarget_ItemID": 2000151,   // The ID of the clone target (which item you're basing this item on)
     "AssetBundle_Name": "mybundle",  // the FOLDER NAME of the asset bundle which contains your custom item visuals
     "VisualPrefabName": "myvisuals", // the PREFAB NAME of your custom visuals, in any bundle inside the folder above
     "ItemIconName": "DarkBrandIcon", // the ICON NAME (in the Texture2D folder) for your item. For "myicon.png" enter "myicon".
 	
-	// ACTUAL ITEM PARAMETERS
+    // ACTUAL ITEM PARAMETERS
 	
     "Name": "My Custom Weapon",      // Name (for GameObjects AND actual display name)
     "Description": "Description.",   // Description
@@ -29,28 +29,28 @@
     ],
     "ManaUseModifier": 0.0,           // Mana cost PENALTY (float). For cost reduction, use negative values.
 	
-	// WEAPON STATS
-	
+     // WEAPON STATS
+	  
     "AttackSpeed": 1.2,               // Attack speed (float). 1.0 is default.
     "Impact": 25.0,                   // base Impact (float)
 	
-    "BaseDamage": {					  // :: BASE DAMAGE LIST ::
+    "BaseDamage": {                   // :: BASE DAMAGE LIST ::
         "m_list": [
-			// Note: Each type must be contained in a { "Type": 0-5, "Damage": 0-999+ } wrapper, separate with comma.
+            // Note: Each type must be contained in a { "Type": 0-5, "Damage": 0-999+ } wrapper, separate with comma.
             {
-                "Type": 0,			  // Damage Type (enum - see "Damage Bonuses"). 0 is Physical.
+                "Type": 0,            // Damage Type (enum - see "Damage Bonuses"). 0 is Physical.
                 "Damage": 36.0        // Actual damage value (float)
             },
-			{
-				"Type": 3,			  // optional secondary (and more if you want) damage type(s). 3 is Lightning.
-				"Damage": 15.0
-			}
+	    {
+                "Type": 3,            // optional secondary (and more if you want) damage type(s). 3 is Lightning.
+                "Damage": 15.0
+	    }
         ]
     },
 	
     "hitEffects": [ // a list of status effects you want the weapon to inflict. Separate with comma and newline.
 		"None"
-        // "Bleeding",
+                // "Bleeding",
 		// "Bleeding +",
 		// "Burning",
 		// "Poisoned",
