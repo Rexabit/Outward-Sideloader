@@ -32,4 +32,4 @@ To load custom textures (for your assets):
 ## Custom Item Example
 
 * The "Custom Item Template.json" file shows an explanation of how to set up the custom item .json files.
-* "Custom Item Example Resources.zip" is a Resources folder (extract to Outward\Mods\". You can see the structure of how to set up two custom weapons with their asset bundles and custom Texture2D pngs. Open the AssetBundles in Unity to see how to set up these models.
+* "Custom Item Example Resources.zip" is a Resources folder (extract to Outward\Mods\\). You can see the structure of how to set up two custom weapons with their asset bundles and custom Texture2D pngs. Open the AssetBundles in Unity to see how to set up these models.
