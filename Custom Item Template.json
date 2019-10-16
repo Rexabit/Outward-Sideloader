@@ -41,16 +41,16 @@
                 "Type": 0,            // Damage Type (enum - see "Damage Bonuses"). 0 is Physical.
                 "Damage": 36.0        // Actual damage value (float)
             },
-	    {
+            {
                 "Type": 3,            // optional secondary (and more if you want) damage type(s). 3 is Lightning.
                 "Damage": 15.0
-	    }
+            }
         ]
     },
 	
     "hitEffects": [ // a list of status effects you want the weapon to inflict. Separate with comma and newline.
 		"None"
-                // "Bleeding",
+		// "Bleeding",
 		// "Bleeding +",
 		// "Burning",
 		// "Poisoned",
