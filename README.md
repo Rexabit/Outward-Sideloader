@@ -8,11 +8,11 @@ Uses Partiality - https://github.com/PartialityModding/PartialityLauncher/releas
 
 How to use:
 
-* Unzip the "SideLoader.zip" file in the "! Release" folder directly to your Outward installation directory.
+* Unzip the "SideLoader.zip" file (in the "! Release" folder) directly to your Outward installation directory.
 * That's it! Follow specific instructions below for more info.
 
 To replace Textures:
-* Put your texture PNG's in the "Resources\Texture2D\" folder
+* Put your texture PNG's in the "Mods\Resources\Texture2D\" folder
 * They must have the exact name that the game uses for them. Use UABE or AssetStudio to find names.
 * Currently you can edit the main texture (usually \_d for diffuse, or NO \_[letter] at the end)
 * You can also edit the \_n (normal or height map) version, but you must also include the main texture as well or no changes will be made.
@@ -32,4 +32,4 @@ To load custom textures (for your assets):
 ## Custom Item Example
 
 * The "Custom Item Template.json" file shows an explanation of how to set up the custom item .json files.
-* "Custom Item Example Resources.zip" is a Resources folder (extract to Outward\Mods\". You can see the structure of how to set up two custom weapons with their asset bundles and custom Texture2D pngs. Open the AssetBundles in Unity to see how to set up these models.
+* "Custom Item Example Resources.zip" is a Resources folder (extract to Outward\Mods\\). You can see the structure of how to set up two custom weapons with their asset bundles and custom Texture2D pngs. Open the AssetBundles in Unity to see how to set up these models.
