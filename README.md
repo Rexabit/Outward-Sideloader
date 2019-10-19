@@ -18,6 +18,8 @@ To replace Textures:
 * You can also edit the \_n (normal or height map) version, but you must also include the main texture as well or no changes will be made.
 
 To load custom asset bundles:
+* You MUST be on the same version of Unity that the game uses. This is currently 5.6.1, soon will be 2018.4
+* Look at this Docs page if you're new to AssetBundles: https://docs.unity3d.com/Manual/AssetBundles-Workflow.html
 * Add a reference to SideLoader.dll (from Outward\Mods\) to your project
 * Put "Using SideLoader;" at the top of your C# file
 * You can now access the SideLoader from "SL.Instance"
