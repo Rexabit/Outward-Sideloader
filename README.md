@@ -42,6 +42,7 @@ This SideLoader also has a basic Custom Items and Custom Recipes feature. Curren
 
 To define a custom item or recipe, simply use one of the .JSON templates below depending on the type of item you want to create, and place the json file in the CustomItems (or CustomItems\CustomRecipes\\) folder.
 
+#### Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
 
 ```
@@ -76,7 +77,10 @@ First, we'll define our new Item ID and the Item ID of the item we are using for
 
 ``CloneTarget_ItemID`` : The Item ID which we will use as a base. Choose one similar to your item if possible.
 
+
 The next few settings apply to the custom visuals. If you're not using any, just leave these blank ("" or 0)
+
+
 ``AssetBundle_Name`` : The FOLDER NAME where your custom Visual Prefab
 
 ``VisualPrefabName`` : The UNIQUE PREFAB NAME of your custom item visuals. It can be inside ANY asset bundle in your folder.
@@ -87,7 +91,9 @@ The next few settings apply to the custom visuals. If you're not using any, just
 
 ``Visual_RotOffset`` : The Vector3 rotation offset (Quaternion.Euler), also mainly for weapons and armor.
 
+
 Finally, the real item details:
+
 
 ``Name`` : Your item name
 
@@ -98,6 +104,7 @@ Finally, the real item details:
 ``BaseValue`` : Item buy price. Sell price is 0.3x buy price.
 
 ``Weight`` : Item weight.
+
 
 #### Custom Equipment ####
 You can define a custom equipment such as armor, bags etc. with the following template:
