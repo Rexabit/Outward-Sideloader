@@ -71,21 +71,32 @@ All Custom Items have the following parameters. If you're just defining a generi
 
 First, we'll define our new Item ID and the Item ID of the item we are using for a base.
 
+
 ``New_ItemID`` : The new unique Item ID which your item will use. This will overwrite the existing ID if it exists already.
+
 ``CloneTarget_ItemID`` : The Item ID which we will use as a base. Choose one similar to your item if possible.
 
 The next few settings apply to the custom visuals. If you're not using any, just leave these blank ("" or 0)
 ``AssetBundle_Name`` : The FOLDER NAME where your custom Visual Prefab
+
 ``VisualPrefabName`` : The UNIQUE PREFAB NAME of your custom item visuals. It can be inside ANY asset bundle in your folder.
+
 ``ItemIconName`` : The ICON NAME (without ".png") of your custom item icon. Place it inside the Texture2D folder.
+
 ``Visual_PosOffset`` : The Vector3 transform position offset of your visuals, mainly for aligning weapons and armor.
+
 ``Visual_RotOffset`` : The Vector3 rotation offset (Quaternion.Euler), also mainly for weapons and armor.
 
 Finally, the real item details:
+
 ``Name`` : Your item name
+
 ``Description`` : Optional item description
+
 ``Durability`` : Item durability stat. Set to -1 for infinite (none).
+
 ``BaseValue`` : Item buy price. Sell price is 0.3x buy price.
+
 ``Weight`` : Item weight.
 
 #### Custom Equipment ####
@@ -149,12 +160,19 @@ You can define a custom equipment such as armor, bags etc. with the following te
 Aside from the same properties we have from the base item template, we also have some new settings:
 
 ``DamageBonuses`` : the Damage Bonus stat for each element (order: Phys, Ethereal, Decay, Lightning, Frost, Fire, n/a, n/a, Raw)
+
 ``DamageResistances`` : The Damage Resistance stat for each element, same order as bonuses
+
 ``PhysProtection`` : The Physical Protection stat
+
 ``ManaUseModifier`` : The Mana Use Modifier stat. For cost reduction, use negative values.
+
 ``MovementPenalty`` : Actually "Movement Speed Bonus" in game. For speed bonus, use negative values.
+
 ``HealthBonus`` : Not displayed in game. Max HP bonus.
+
 ``PouchBonus`` : Pouch capacity bonus.
+
 ``ColdProtection`` and ``HeatProtection`` : Weather protection stats
 
 #### Custom Weapons ####
@@ -242,6 +260,7 @@ NOTE: Most of the Equipment Stats cannot be displayed by weapons. Only Damage Bo
 The new options we have for weapons are:
 
 ``AttackSpeed`` : The attack speed stat, default is 1.0. Only used by Melee Weapons.
+
 ``Impact`` : The Base Impact damage of the weapon
 
 ``BaseDamage`` : I've shown the format to use for two different damage types. If you want more or less, add or remove the { "Type": [number], "Damage": [number] } brackets as needed. 
