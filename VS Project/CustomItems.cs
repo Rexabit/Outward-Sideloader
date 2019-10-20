@@ -18,48 +18,6 @@ namespace SideLoader
         {
             SideLoader.Log("Loading custom items...");
 
-            //yield return null;
-
-            //CustomWeapon weapon = new CustomWeapon
-            //{
-            //    New_ItemID = 6666666,
-            //    CloneTarget_ItemID = 2000151,
-            //    AssetBundle_Name = "mybundle",
-            //    VisualPrefabName = "NewDarkBrand_visuals",
-            //    ItemIconName = "DarkBrandIcon",
-            //    Visual_PosOffset = new Vector3(0.23f, 0, 0),
-            //    Visual_RotOffset = new Vector3(0, -90, 0),
-            //    Name = "Blight",
-            //    Description = "The Commander said to make this sword fit for the Scourge.\n\nInflicts Curse on enemies.",
-            //    Durability = 1000,
-            //    BaseValue = 1000,
-            //    Weight = 3.0f,
-            //    DamageBonuses = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            //    DamageResistances = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            //    PhysProtection = 0,
-            //    ImpactResistance = 0,
-            //    ManaUseModifier = 0,
-            //    StaminaUsePenalty = 0,
-            //    MovementPenalty = 0,
-            //    HealthBonus = 0,
-            //    PouchBonus = 0,
-            //    ColdProtection = 0,
-            //    HeatProtection = 0,
-            //    AttackSpeed = 1.2f,
-            //    Impact = 25,
-            //    BaseDamage = new DamageList(DamageType.Types.Physical, 36.0f),
-            //    hitEffects = new List<string>() { "Curse" },
-            //};
-            //File.WriteAllText(script.loadDir + @"\CustomItems\Blight.json", JsonUtility.ToJson(weapon, true));
-
-            //CustomRecipe recipe = new CustomRecipe()
-            //{
-            //    Result_ItemID = 6666666,
-            //    CraftingType = 2,
-            //    Ingredient_ItemIDs = new List<int> { 2000150 , 4400070, 6400070, 6200010 }
-            //};
-            //File.WriteAllText(script.loadDir + @"\CustomItems\Recipes\Blight.json", JsonUtility.ToJson(recipe, true));
-
             foreach (string path in script.FilePaths[ResourceTypes.CustomItems])
             {
                 string json = File.ReadAllText(script.loadDir + @"\CustomItems\" + path);
