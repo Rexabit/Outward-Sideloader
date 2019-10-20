@@ -139,9 +139,12 @@ namespace SideLoader
                             GameObject newModel = Instantiate(customModel);
                             newModel.transform.parent = newVisuals.transform;
 
-                            // fix rotation and pos
-                            newModel.transform.position = template.Visual_PosOffset;
-                            newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
+                            if (!(item is Armor)) // dont fix here for armor, the setting is used for the ArmorVisualPrefab
+                            {
+                                // fix rotation and pos
+                                newModel.transform.position = template.Visual_PosOffset;
+                                newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
+                            }
 
                             break;
                         }
@@ -178,6 +181,10 @@ namespace SideLoader
                             {
                                 DestroyImmediate(mesh);
                             }
+
+                            // fix rotation and pos
+                            newModel.transform.position = template.Visual_PosOffset;
+                            newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
 
                             break;
                         }
