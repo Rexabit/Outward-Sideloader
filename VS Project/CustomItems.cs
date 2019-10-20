@@ -30,6 +30,7 @@ namespace SideLoader
                     Item target = ResourcesPrefabManager.Instance.GetItemPrefab(template.CloneTarget_ItemID);
 
                     ApplyCustomItem(template);
+                    script.LoadedCustomItems.Add(template.New_ItemID, ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID));
 
                     if (target is Weapon)
                     {
@@ -95,10 +96,23 @@ namespace SideLoader
                     SideLoader.Log(string.Format("Added {0} to RPM dictionary.", item.Name));
                 }
 
-                if (item.VisualPrefab != null)
+                // set item icon
+                if (!string.IsNullOrEmpty(template.ItemIconName))
+                {
+                    Texture2D icon = script.TextureData[template.ItemIconName];
+                    if (icon)
+                    {
+                        Sprite newIcon = Sprite.Create(icon, new Rect(0, 0, icon.width, icon.height), Vector2.zero);
+                        At.SetValue(newIcon, typeof(Item), item, "m_itemIcon");
+                    }
+                }
+
+                // for item visuals that are not ArmorVisuals
+                if (item.VisualPrefab)
                 {
                     // clone the visual prefab so we can modify it without affecting the original item
                     Transform newVisuals = Instantiate(item.VisualPrefab);
+
                     newVisuals.gameObject.SetActive(false);
                     DontDestroyOnLoad(newVisuals);
                     item.VisualPrefab = newVisuals;
@@ -128,18 +142,48 @@ namespace SideLoader
                             // fix rotation and pos
                             newModel.transform.position = template.Visual_PosOffset;
                             newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
+
+                            break;
                         }
                     }
+                }
 
-                    if (!string.IsNullOrEmpty(template.ItemIconName))
+                if (item.SpecialVisualPrefab)
+                {
+                    // check if user defined a custom armorvisuals
+                    if (!string.IsNullOrEmpty(template.AssetBundle_Name) && !string.IsNullOrEmpty(template.ArmorVisualPrefabName) && script.LoadedBundles.ContainsKey(template.AssetBundle_Name))
                     {
-                        // set custom icon
-                        Texture2D icon = script.TextureData[template.ItemIconName];
-                        if (icon)
+                        foreach (AssetBundle bundle in script.LoadedBundles[template.AssetBundle_Name])
                         {
-                            Sprite newIcon = Sprite.Create(icon, new Rect(0, 0, icon.width, icon.height), Vector2.zero);
-                            At.SetValue(newIcon, typeof(Item), item, "m_itemIcon");
+                            // check if this asset bundle contains our custom object
+                            if (!(bundle.LoadAsset<GameObject>(template.ArmorVisualPrefabName) is GameObject customModel))
+                            { continue; } // wrong assetbundle
+
+                            // set up our new model
+                            GameObject newModel = Instantiate(customModel);
+
+                            DontDestroyOnLoad(newModel);
+                            newModel.gameObject.SetActive(false);
+                            item.SpecialVisualPrefabDefault = newModel.transform;
+
+                            ArmorVisuals visuals = newModel.AddComponent<ArmorVisuals>();
+
+                            foreach (MeshRenderer mesh in newModel.GetComponents<MeshRenderer>())
+                            {
+                                DestroyImmediate(mesh);
+                            }
+
+                            break;
                         }
+                    }
+                    else
+                    {
+                        // clone the visual prefab so we can modify it without affecting the original item
+                        Transform newVisuals = Instantiate(item.SpecialVisualPrefabDefault);
+
+                        newVisuals.gameObject.SetActive(false);
+                        DontDestroyOnLoad(newVisuals);
+                        item.SpecialVisualPrefabDefault = newVisuals;
                     }
                 }
 
@@ -318,6 +362,7 @@ namespace SideLoader
         // asset bundle stuff
         public string AssetBundle_Name;
         public string VisualPrefabName;
+        public string ArmorVisualPrefabName;
         public string ItemIconName;
 
         // visual prefab custom alignment

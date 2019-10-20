@@ -27,7 +27,7 @@ namespace SideLoader
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.F5))
+            if ((Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.F5))
             {
                 ShowGUI = !ShowGUI;
             }
@@ -51,7 +51,7 @@ namespace SideLoader
 
             if (m_windowRect == Rect.zero || m_windowRect == null)
             {
-                m_windowRect = new Rect(200, 5, 530, 470);
+                m_windowRect = new Rect(5, 5, 250, 500);
             }
             else
             {
@@ -63,7 +63,29 @@ namespace SideLoader
 
         private void DrawWindow(int id)
         {
-            
+            GUI.DragWindow(new Rect(0, 0, m_windowRect.width, 20));
+
+            GUILayout.BeginArea(new Rect(4, 22, m_windowRect.width - 8, m_windowRect.height - 26), GUI.skin.box);
+            scroll = GUILayout.BeginScrollView(scroll);
+
+            if (SL.Instance.InitDone > 0)
+            {
+                GUILayout.Label("Custom Item Spawner");
+                foreach (Item item in script.LoadedCustomItems.Values)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(item.Name, GUILayout.Width(150));
+                    if (GUILayout.Button("Spawn", GUILayout.Width(75)) && Global.Lobby.PlayersInLobbyCount > 0)
+                    {
+                        Item item2 = ItemManager.Instance.GenerateItemNetwork(item.ItemID);
+                        item2.transform.position = CharacterManager.Instance.GetFirstLocalCharacter().transform.position + Vector3.forward + Vector3.up;
+                    }
+                    GUILayout.EndHorizontal();
+                }
+            }
+
+            GUILayout.EndScrollView();
+            GUILayout.EndArea();
         }
     }
 }
