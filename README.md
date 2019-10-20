@@ -9,7 +9,7 @@ Uses Partiality - https://github.com/PartialityModding/PartialityLauncher/releas
 How to use:
 
 * Unzip the "SideLoader.zip" file directly to your Outward installation directory.
-* Enable the mod in Partiality, hit "Apply Mods" and "Yes"
+* For Partiality users, enable the mod in Partiality, hit "Apply Mods" and "Yes"
 * For BepInEx, move "SideLoader.dll" to "Outward\BepInEx\plugins\\", and install the BepInEx Partiality wrapper.
 * That's it! Follow specific instructions below for more info.
 
