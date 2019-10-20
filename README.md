@@ -42,6 +42,16 @@ Note: I have included an example Resources folder, which shows how to set up a c
 
 You can define custom items by creating a "myitemname.json" file in the CustomItems folder, following one of the following templates.
 
+#### Notes about Custom Visual Prefabs ####
+
+Some knowledge about Unity is recommended if you plan on setting up your own custom visuals. You'll need to import an .fbx mesh, create a GameObject prefab out of it, and assign that prefab to an asset bundle. 
+
+Importantly, the custom visuals must:
+* Have a BoxCollider (used for world collision, not combat)
+* Have a transform scale of 1, 1, 1
+
+All assets which are used for your custom visuals must also be included in the same asset bundle.
+
 #### Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
 
