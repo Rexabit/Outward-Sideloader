@@ -56,7 +56,7 @@ namespace SideLoader
         public AssetBundleLoader BundleLoader;
         public AssetReplacer Replacer;
         public CustomItems CustomItems;
-        public SLGUI gui;
+        //public SLGUI gui;
 
         // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
@@ -116,7 +116,7 @@ namespace SideLoader
             BundleLoader = _base.obj.AddComponent(new AssetBundleLoader { script = this });
             Replacer = _base.obj.AddComponent(new AssetReplacer { script = this });
             CustomItems = _base.obj.AddComponent(new CustomItems { script = this });
-            gui = _base.obj.AddComponent(new SLGUI { script = this });
+            //gui = _base.obj.AddComponent(new SLGUI { script = this });
 
             // read folders, store all file paths in FilePaths dictionary
             CheckFolders();
@@ -184,17 +184,17 @@ namespace SideLoader
             log = "[SideLoader] " + log;
             if (errorLevel == 1)
             {
-                //OLogger.Error(log);
+                OLogger.Error(log);
                 Debug.LogError(log);
             }
             else if (errorLevel == 0)
             {
-                //OLogger.Warning(log);
+                OLogger.Warning(log);
                 Debug.Log(log);
             }
             else if (errorLevel == -1)
             {
-                //OLogger.Log(log);
+                OLogger.Log(log);
                 Debug.Log(log);
             }
         }
