@@ -83,7 +83,7 @@ First, we'll define our new Item ID and the Item ID of the item we are using for
 The next few settings apply to the custom visuals. If you're not using any, just leave these blank ("" or 0)
 
 
-``AssetBundle_Name`` : The FOLDER NAME which contains your asset bundle for your visual prefab.
+``AssetBundle_Name`` : The FOLDER NAME which contains your asset bundle for your visual prefab. This folder must be inside the AssetBundles folder.
 
 ``VisualPrefabName`` : The UNIQUE PREFAB NAME of your custom item visuals. It can be inside ANY asset bundle in your folder.
 
