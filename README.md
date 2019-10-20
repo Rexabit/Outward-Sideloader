@@ -53,7 +53,7 @@ All Custom Items have the following parameters. If you're just defining a generi
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
     "HelmetHideFace": false,
-    "HelmetHideFace": false,
+    "HelmetHideHair": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
         "x": 0.0,
@@ -125,7 +125,7 @@ You can define a custom equipment such as armor, bags etc. with the following te
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
     "HelmetHideFace": false,
-    "HelmetHideFace": false,
+    "HelmetHideHair": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
         "x": 0.0,
@@ -207,7 +207,7 @@ For Custom Weapons, use the following template:
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "",
     "HelmetHideFace": false,
-    "HelmetHideFace": false,
+    "HelmetHideHair": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
         "x": 0.0,
