@@ -38,6 +38,8 @@ If you are using asset bundles to define custom items using the Custom Items fea
 * Follow standard Unity procedure for instantiating objects from your AssetBundles as needed.
 
 ### Custom Items and Recipes ###
+Note: I have included an example Resources folder, which shows how to set up a custom weapon. Extract this and merge it with your Mods\Resources folder, and have a look how things are set up.
+
 This SideLoader also has a basic Custom Items and Custom Recipes feature. Currently, Weapons and Equipment have (more or less) full support, and there is basic support for generic items as well.
 
 To define a custom item or recipe, simply use one of the .JSON templates below depending on the type of item you want to create, and place the json file in the CustomItems (or CustomItems\Recipes\\) folder.
