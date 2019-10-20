@@ -313,7 +313,7 @@ Either define recipes at runtime using C#, or place Recipe JSON files in the "Cu
 If you are using the SideLoader as a reference in your C# Mod, you can use the following syntax to define recipes at runtime:
 
 ```
-SL.Instance.DefineRecipe(int ItemID, int craftingType, List<int> IngredientIDs);
+SideLoader.CustomItems.DefineRecipe(int ItemID, int craftingType, List<int> IngredientIDs);
 ```
 
 Where ItemID is the ID of the Item rewarded on crafting the Recipe, craftingType is the station type (0 is Alchemy, 1 is Cooking, 2 is None) and IngredientIDs is a List of ints which are your ingredient item IDs.
