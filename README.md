@@ -83,15 +83,15 @@ All Custom Items have the following parameters. If you're just defining a generi
 }
 ```
 
-First, we'll define our new Item ID and the Item ID of the item we are using for a base.
+First, we'll define our new Item ID, and the item we will be using for a base.
 
 
 ``New_ItemID`` : The new unique Item ID which your item will use. This will overwrite the existing ID if it exists already.
 
-``CloneTarget_ItemID`` : The Item ID which we will use as a base. Choose one similar to your item if possible.
+``CloneTarget_ItemID`` : The Item ID which we will use as a base. Choose one as similar as possible to your item.
 
 
-The next few settings apply to the custom visuals. If you're not using any, just leave these blank ("" or 0)
+The next few settings apply to the custom visuals. If you're not using any, just leave these blank ("")
 
 
 ``AssetBundle_Name`` : The FOLDER NAME which contains your asset bundle for your visual prefab. This folder must be inside the AssetBundles folder.
