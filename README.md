@@ -52,6 +52,8 @@ All Custom Items have the following parameters. If you're just defining a generi
     "AssetBundle_Name": "MyBundleFolder",
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
+    "HelmetHideFace": false,
+    "HelmetHideFace": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
         "x": 0.0,
@@ -88,6 +90,10 @@ The next few settings apply to the custom visuals. If you're not using any, just
 
 ``ArmorVisualPrefabName`` : Only for armor. This is the special Skinned Mesh version of your armor visual prefab, used when it is equipped. For weapons and other items, just put "".
 
+``HelmetHideFace`` : For Helmets only. 'true' to hide the player's face when equipped, false to show.
+
+``HelmetHideHair`` : For Helmets only. 'true' to hide hair when equipped, 'false' to show.
+
 ``ItemIconName`` : The ICON NAME (without ".png") of your custom item icon. Place it inside the Texture2D folder.
 
 ``Visual_PosOffset`` : The Vector3 transform position offset of your visuals, mainly for aligning weapons and armor.
@@ -118,6 +124,8 @@ You can define a custom equipment such as armor, bags etc. with the following te
     "AssetBundle_Name": "MyBundleFolder",
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
+    "HelmetHideFace": false,
+    "HelmetHideFace": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
         "x": 0.0,
@@ -198,6 +206,8 @@ For Custom Weapons, use the following template:
     "AssetBundle_Name": "MyBundleFolder",
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "",
+    "HelmetHideFace": false,
+    "HelmetHideFace": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
         "x": 0.0,
