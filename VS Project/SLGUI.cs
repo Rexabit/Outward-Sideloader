@@ -27,7 +27,7 @@ namespace SideLoader
                 return;
             }
 
-            if ((Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.F5))
+            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.F5))
             {
                 ShowGUI = !ShowGUI;
             }
