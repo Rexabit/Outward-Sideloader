@@ -168,6 +168,12 @@ namespace SideLoader
 
                             ArmorVisuals visuals = newModel.AddComponent<ArmorVisuals>();
 
+                            if (item is Armor armor && armor.EquipSlot == EquipmentSlot.EquipmentSlotIDs.Helmet)
+                            {
+                                visuals.HideFace = template.HelmetHideFace;
+                                visuals.HideHair = template.HelmetHideHair;
+                            }
+
                             foreach (MeshRenderer mesh in newModel.GetComponents<MeshRenderer>())
                             {
                                 DestroyImmediate(mesh);
@@ -363,6 +369,8 @@ namespace SideLoader
         public string AssetBundle_Name;
         public string VisualPrefabName;
         public string ArmorVisualPrefabName;
+        public bool HelmetHideFace;
+        public bool HelmetHideHair;
         public string ItemIconName;
 
         // visual prefab custom alignment
