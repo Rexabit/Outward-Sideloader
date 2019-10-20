@@ -37,12 +37,12 @@ If you are using asset bundles to define custom items using the Custom Items fea
 * SL.Instance.LoadedBundles["foldername"] will give you a list of AssetBundles in your folder
 * Follow standard Unity procedure for instantiating objects from your AssetBundles as needed.
 
-### Custom Items and Recipes ###
+### Custom Items ###
 Note: I have included an example Resources folder, which shows how to set up a custom weapon. Extract this and merge it with your Mods\Resources folder, and have a look how things are set up.
 
 This SideLoader also has a basic Custom Items and Custom Recipes feature. Currently, Weapons and Equipment have (more or less) full support, and there is basic support for generic items as well.
 
-To define a custom item or recipe, simply use one of the .JSON templates below depending on the type of item you want to create, and place the json file in the CustomItems (or CustomItems\Recipes\\) folder.
+To define a custom item, simply use one of the .JSON templates below depending on the type of item you want to create, and place the json file in the CustomItems folder.
 
 #### Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
@@ -106,35 +106,6 @@ Finally, the real item details:
 ``BaseValue`` : Item buy price. Sell price is 0.3x buy price.
 
 ``Weight`` : Item weight.
-
-
-#### Custom Recipes ####
-
-All items (including already existing ones) can have custom recipes defined for them by the SideLoader.
-
-Place your Recipe .json files in "CustomItems\Recipes\".
-
-Template:
-```
-{
-    "Result_ItemID": 0,
-    "CraftingType": 2,
-    "Ingredient_ItemIDs": [
-        0,
-        0,
-        0,
-        0
-    ]
-}
-```
-
-Settings explanation:
-
-``Result_ItemID`` : The Item ID which will be rewarded upon crafting the item. Can be your custom ID.
-
-`` CraftingType`` : 0 for Alchemy Station, 1 for Cooking Station, 2 for Survival (no station)
-
-``Ingredient_IDs`` : 1 to 4 Item IDs which will form your recipe. Make sure to remove unused ID lines if you aren't using all 4.
 
 
 #### Custom Equipment ####
@@ -332,6 +303,47 @@ Note that the names used here are not necessarily the actual name displayed by t
 * "Cripped"
 * "Slow Down"
 
-##Conclusion##
+### Custom Recipes ###
+
+All items (including custom or already existing ones) can have custom recipes defined for them by the SideLoader.
+
+Either define recipes at runtime using C#, or place Recipe JSON files in the "CustomItems\Recipes\\" folder.
+
+#### Recipes at Runtime from C# ####
+If you are using the SideLoader as a reference in your C# Mod, you can use the following syntax to define recipes at runtime:
+
+```
+SL.Instance.DefineRecipe(int ItemID, int craftingType, List<int> IngredientIDs);
+```
+
+Where ItemID is the ID of the Item rewarded on crafting the Recipe, craftingType is the station type (0 is Alchemy, 1 is Cooking, 2 is None) and IngredientIDs is a List of ints which are your ingredient item IDs.
+
+#### Recipes from .JSON ####
+
+Place your Recipe .json files in "CustomItems\Recipes\".
+
+Template:
+```
+{
+    "Result_ItemID": 0,
+    "CraftingType": 2,
+    "Ingredient_ItemIDs": [
+        0,
+        0,
+        0,
+        0
+    ]
+}
+```
+
+Settings explanation:
+
+``Result_ItemID`` : The ID of the Item which will be rewarded upon crafting the recipe.
+
+`` CraftingType`` : 0 for Alchemy Station, 1 for Cooking Station, 2 for Survival (no station)
+
+``Ingredient_IDs`` : The List of Item IDs which will form your recipe. Make sure to remove unused ID lines if you aren't using all 4.
+
+## Conclusion ##
 
 If you have any more questions, feel free to contact me in the Outard Discord, I'm Sinai#4637.
