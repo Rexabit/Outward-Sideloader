@@ -40,7 +40,7 @@ If you are using asset bundles to define custom items using the Custom Items fea
 ### Custom Items and Recipes ###
 This SideLoader also has a basic Custom Items and Custom Recipes feature. Currently, Weapons and Equipment have (more or less) full support, and there is basic support for generic items as well.
 
-To define a custom item or recipe, simply use one of the .JSON templates below depending on the type of item you want to create, and place the json file in the CustomItems (or CustomItems\CustomRecipes\\) folder.
+To define a custom item or recipe, simply use one of the .JSON templates below depending on the type of item you want to create, and place the json file in the CustomItems (or CustomItems\Recipes\\) folder.
 
 #### Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
@@ -104,6 +104,35 @@ Finally, the real item details:
 ``BaseValue`` : Item buy price. Sell price is 0.3x buy price.
 
 ``Weight`` : Item weight.
+
+
+#### Custom Recipes ####
+
+All items (including already existing ones) can have custom recipes defined for them by the SideLoader.
+
+Place your Recipe .json files in "CustomItems\Recipes\".
+
+Template:
+```
+{
+    "Result_ItemID": 0,
+    "CraftingType": 2,
+    "Ingredient_ItemIDs": [
+        0,
+        0,
+        0,
+        0
+    ]
+}
+```
+
+Settings explanation:
+
+``Result_ItemID`` : The Item ID which will be rewarded upon crafting the item. Can be your custom ID.
+
+`` CraftingType`` : 0 for Alchemy Station, 1 for Cooking Station, 2 for Survival (no station)
+
+``Ingredient_IDs`` : 1 to 4 Item IDs which will form your recipe. Make sure to remove unused ID lines if you aren't using all 4.
 
 
 #### Custom Equipment ####
