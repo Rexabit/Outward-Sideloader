@@ -19,7 +19,7 @@ namespace SideLoader
 
         public GameObject obj;
         public string ID = "OTW_SideLoader";
-        public double version = 1.0;
+        public double version = 1.1;
 
         public SL()
         {
@@ -49,13 +49,14 @@ namespace SideLoader
     {
         public SL _base;
 
+        public int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
+        public bool Loading = false; // for coroutines
+
         // components
         public AssetBundleLoader BundleLoader;
         public AssetReplacer Replacer;
         public CustomItems CustomItems;
-
-        public int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
-        public bool Loading = false; // for coroutines
+        public SLGUI gui;
 
         // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
@@ -112,6 +113,7 @@ namespace SideLoader
             BundleLoader = _base.obj.AddComponent(new AssetBundleLoader { script = this });
             Replacer = _base.obj.AddComponent(new AssetReplacer { script = this });
             CustomItems = _base.obj.AddComponent(new CustomItems { script = this });
+            gui = _base.obj.AddComponent(new SLGUI { script = this });
 
             // read folders, store all file paths in FilePaths dictionary
             CheckFolders();
@@ -174,7 +176,7 @@ namespace SideLoader
 
         // ============== Other misc functions ==============
 
-        public void Log(string log, int errorLevel = -1)
+        public static void Log(string log, int errorLevel = -1)
         {
             log = "[SideLoader] " + log;
             if (errorLevel == 1)

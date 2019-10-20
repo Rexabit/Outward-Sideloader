@@ -15,7 +15,7 @@ namespace SideLoader
         public IEnumerator LoadAssetBundles()
         {
             float start = Time.time;
-            script.Log("Loading Asset Bundles...");
+            SideLoader.Log("Loading Asset Bundles...");
 
             // get all bundle folders
             foreach (string dir in script.FilePaths[ResourceTypes.AssetBundle])
@@ -33,17 +33,17 @@ namespace SideLoader
                     }
                     catch (Exception e)
                     {
-                        script.Log(string.Format("Error loading bundle: {0}\r\nMessage: {1}\r\nStack Trace: {2}", dir, e.Message, e.StackTrace), 1);
+                        SideLoader.Log(string.Format("Error loading bundle: {0}\r\nMessage: {1}\r\nStack Trace: {2}", dir, e.Message, e.StackTrace), 1);
                     }
                 }
 
                 script.LoadedBundles.Add(dir, list);
-                script.Log(" - Loaded folder: " + dir);
+                SideLoader.Log(" - Loaded folder: " + dir);
                 yield return null;
             }
 
             script.Loading = false;
-            script.Log("Asset Bundles loaded. Time: " + (Time.time - start));
+            SideLoader.Log("Asset Bundles loaded. Time: " + (Time.time - start));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace SideLoader
 
         public IEnumerator ReplaceActiveAssets()
         {
-            script.Log("Replacing active assets...");
+            SideLoader.Log("Replacing active assets...");
             float start = Time.time;
 
             // ============ materials ============
@@ -21,13 +21,13 @@ namespace SideLoader
                         .Where(x => x.mainTexture != null && script.TextureData.ContainsKey(x.mainTexture.name))
                         .ToList();
 
-            script.Log(string.Format("Found {0} materials to replace.", list.Count));
+            SideLoader.Log(string.Format("Found {0} materials to replace.", list.Count));
 
             int i = 0;
             foreach (Material m in list)
             {
                 string name = m.mainTexture.name;
-                i++; script.Log(string.Format(" - Replacing material {0} of {1}: {2}", i, list.Count, name));
+                i++; SideLoader.Log(string.Format(" - Replacing material {0} of {1}: {2}", i, list.Count, name));
 
                 // set maintexture (diffuse map)
                 m.mainTexture = script.TextureData[name];
@@ -37,7 +37,7 @@ namespace SideLoader
                 name += "_n";  // add the _n (normal map)
                 if (script.TextureData.ContainsKey(name))
                 {
-                    script.Log("  -- Setting bump map for " + m.name);
+                    SideLoader.Log("  -- Setting bump map for " + m.name);
                     m.SetTexture("_BumpMap", script.TextureData[name]);
                 }
 
@@ -49,13 +49,13 @@ namespace SideLoader
 
             // ==============================================
 
-            script.Log("Active assets replaced. Time: " + (Time.time - start), 0);
+            SideLoader.Log("Active assets replaced. Time: " + (Time.time - start), 0);
             script.Loading = false;
         }
 
         public IEnumerator LoadTextures()
         {
-            script.Log("Reading Texture2D data...");
+            SideLoader.Log("Reading Texture2D data...");
             float start = Time.time;
 
             var filesToRead = script.FilePaths[ResourceTypes.Texture];
@@ -70,13 +70,13 @@ namespace SideLoader
 
                 script.TextureData.Add(Path.GetFileNameWithoutExtension(file), texture2D);
 
-                script.Log(" - Texture loaded: " + file);
+                SideLoader.Log(" - Texture loaded: " + file);
 
                 yield return null;
             }
 
             script.Loading = false;
-            script.Log("Textures loaded. Time: " + (Time.time - start), 0);
+            SideLoader.Log("Textures loaded. Time: " + (Time.time - start), 0);
         }
 
         public static Texture2D LoadPNG(string filePath)
