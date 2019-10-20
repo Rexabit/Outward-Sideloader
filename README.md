@@ -10,7 +10,7 @@ How to use:
 
 * Unzip the "SideLoader.zip" file directly to your Outward installation directory.
 * Enable the mod in Partiality, hit "Apply Mods" and "Yes"
-** For BepInEx, move "SideLoader.dll" to "Outward\BepInEx\plugins\\", and install the BepInEx Partiality wrapper.
+* For BepInEx, move "SideLoader.dll" to "Outward\BepInEx\plugins\\", and install the BepInEx Partiality wrapper.
 * That's it! Follow specific instructions below for more info.
 
 ### Replacing Texture .PNGs (Materials) ###
@@ -18,7 +18,7 @@ Texture .PNGs can be placed in the Texture2D folder, the SideLoader will automat
 
 * Put your texture .PNGs in the "Mods\Resources\Texture2D\" folder
 * They must have the exact name that the game uses for them. 
-** I recommend unpacking the game with uTiny ripper and looking in the "Texture2D" folder to get a full list of all texture names, as well as the original PNGs themselves.
+* I recommend unpacking the game with uTiny ripper and looking in the "Texture2D" folder to get a full list of all texture names, as well as the original PNGs themselves.
 * Currently you can edit the main texture (usually "texturename\_d.png", or just "texturename.png")
 * You can also edit the \_n.png (normal or height map version), but you must also include the main texture as well or no changes will be made.
 
