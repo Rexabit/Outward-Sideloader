@@ -47,7 +47,7 @@ To use the loaded Asset Bundles in your own C# mods:
 ### Custom Items ###
 Note: I have included an example Resources folder, which shows how to set up a custom weapon. Extract this and merge it with your Mods\Resources folder, and have a look how things are set up.
 
-You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All JSON files inside the CustomItems folder will be loaded and created automatically.
+You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All items defined in this folder will be loaded and added to the game's systems automatically.
 
 #### Notes about Custom Visual Prefabs ####
 
