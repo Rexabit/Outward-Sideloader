@@ -29,7 +29,7 @@ Nine Dots use a custom shader, and the material names are set like so:
 
 When replacing anything other than the Main Texture, you must ALSO include the main texture otherwise no changes will be made. You do not need to make any changes to the main texture.
 
-Note that sometimes the game uses inconsistent names for the different material layers. In this case, all layers should be renamed after the main texture (maintex, _d.png or no suffix). For example, for Plate Armor, the main texture is "tex_cha_PlateArmorPlain.png", but some of the layers are just "tex_cha_PlateArmor_[suffix].png". The secondary layers in this case would all be renamed to "tex_cha_PlateArmorPlain_[suffix].png" in order for the sideloader to correctly identify them.
+Note that sometimes the game uses inconsistent names for the different material layers. In this case, all layers should be renamed after the main texture (maintex, \_d.png or no suffix). For example, for Plate Armor, the main texture is "tex_cha_PlateArmorPlain.png", but some of the layers are just "tex_cha_PlateArmor_[suffix].png". The secondary layers in this case would all be renamed to "tex_cha_PlateArmorPlain_[suffix].png" in order for the sideloader to correctly identify them.
 
 ### Custom Asset Bundles ###
 Modders can use this tool to conveniently load and manage asset bundles, for use in their own C# mods.
