@@ -21,11 +21,11 @@ Texture .PNGs can be placed in the Texture2D folder, the SideLoader will automat
 * I recommend unpacking the game with uTiny ripper and looking in the "Texture2D" folder to get a full list of all texture names, as well as the original PNGs themselves.
 
 Nine Dots use a custom shader, and the material names are set like so:
-* "_MainTex" ("name_d.png" or "name.png") : Albedo (RGB) and Transparency (A).
-* "_NormTex" ("name_n.png"): Normal map (bump map)
-* "_GenTex" ("name_g.png"): Specular (R), Gloss (G), Occlusion (B).
-* "_SpecColorTex" ("name_sc.png") : used to add color to the specular map in some cases (RGB)
-* "_Emissive" ("name_e.png") : Emissive map (glow map)
+* "\_MainTex" ("name_d.png" or "name.png") : Albedo (RGB) and Transparency (A).
+* "\_NormTex" ("name_n.png"): Normal map (bump map)
+* "\_GenTex" ("name_g.png"): Specular (R), Gloss (G), Occlusion (B).
+* "\_SpecColorTex" ("name_sc.png") : used to add color to the specular map in some cases (RGB)
+* "\_EmissionTex" ("name_i.png" or "name_e.png") : Emissive map (glow map)
 
 When replacing anything other than the Main Texture, you must ALSO include the main texture otherwise no changes will be made. You do not need to make any changes to the main texture.
 
