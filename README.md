@@ -17,17 +17,19 @@ How to use:
 Texture .PNGs can be placed in the Texture2D folder, the SideLoader will automatically replace the originals by matching the name.
 
 * Put your texture .PNGs in the "Mods\Resources\Texture2D\" folder
-* They must have the exact name that the game uses for them. 
+* They must have the exact name that the game uses for them. This file will almost always begin with the prefix "tex_"
 * I recommend unpacking the game with uTiny ripper and looking in the "Texture2D" folder to get a full list of all texture names, as well as the original PNGs themselves.
 
 Nine Dots use a custom shader, and the material names are set like so:
 * "_MainTex" ("name_d.png" or "name.png") : Albedo (RGB) and Transparency (A).
 * "_NormTex" ("name_n.png"): Normal map (bump map)
-* "_GenTex" ("name_g.png" or "name_m.png"): Specular (R), Gloss (G), Occlusion (B).
+* "_GenTex" ("name_g.png"): Specular (R), Gloss (G), Occlusion (B).
 * "_SpecColorTex" ("name_sc.png") : used to add color to the specular map in some cases (RGB)
 * "_Emissive" ("name_e.png") : Emissive map (glow map)
 
 When replacing anything other than the Main Texture, you must ALSO include the main texture otherwise no changes will be made. You do not need to make any changes to the main texture.
+
+Note that sometimes the game uses inconsistent names for the different material layers. In this case, all layers should be renamed after the main texture (maintex, _d.png or no suffix). For example, for Plate Armor, the main texture is "tex_cha_PlateArmorPlain.png", but some of the layers are just "tex_cha_PlateArmor_[suffix].png". The secondary layers in this case would all be renamed to "tex_cha_PlateArmorPlain_[suffix].png" in order for the sideloader to correctly identify them.
 
 ### Custom Asset Bundles ###
 Modders can use this tool to conveniently load and manage asset bundles, for use in their own C# mods.
@@ -47,7 +49,7 @@ To use the loaded Asset Bundles in your own C# mods:
 ### Custom Items ###
 Note: I have included an example Resources folder, which shows how to set up a custom weapon. Extract this and merge it with your Mods\Resources folder, and have a look how things are set up.
 
-You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All JSON files inside the CustomItems folder will be loaded and created automatically.
+You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All items defined in this folder will be loaded and added to the game's systems automatically.
 
 #### Notes about Custom Visual Prefabs ####
 
