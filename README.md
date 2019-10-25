@@ -23,7 +23,7 @@ Texture .PNGs can be placed in the Texture2D folder, the SideLoader will automat
 Nine Dots use a custom shader, and the material names are set like so:
 * "_MainTex" ("name_d.png" or "name.png") : Albedo (RGB) and Transparency (A).
 * "_NormTex" ("name_n.png"): Normal map (bump map)
-* "_GenTex" ("name_g.png" or "name_m.png"): Specular (R), Gloss (G), Occlusion (B).
+* "_GenTex" ("name_g.png"): Specular (R), Gloss (G), Occlusion (B).
 * "_SpecColorTex" ("name_sc.png") : used to add color to the specular map in some cases (RGB)
 * "_Emissive" ("name_e.png") : Emissive map (glow map)
 
