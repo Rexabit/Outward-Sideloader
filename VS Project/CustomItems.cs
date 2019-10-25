@@ -90,7 +90,15 @@ namespace SideLoader
                 // fix ResourcesPrefabManager dictionary
                 if (At.GetValue(typeof(ResourcesPrefabManager), null, "ITEM_PREFABS") is Dictionary<string, Item> Items)
                 {
-                    Items.Add(item.ItemID.ToString(), item);
+                    if (Items.ContainsKey(item.ItemID.ToString()))
+                    {
+                        Items[item.ItemID.ToString()] = item;
+                    }
+                    else
+                    {
+                        Items.Add(item.ItemID.ToString(), item);
+                    }
+
                     At.SetValue(Items, typeof(ResourcesPrefabManager), null, "ITEM_PREFABS");
 
                     SideLoader.Log(string.Format("Added {0} to RPM dictionary.", item.Name));
