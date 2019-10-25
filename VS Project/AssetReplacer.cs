@@ -63,7 +63,8 @@ namespace SideLoader
             { "_g", "_GenTex" },
             { "_m", "_GenTex" },
             { "_sc", "_SpecColorTex" },
-            { "_e", "_Emissive" },
+            { "_e", "_EmissionTex" },
+            { "_i", "_EmissionTex" },
         };
 
         public IEnumerator LoadTextures()
