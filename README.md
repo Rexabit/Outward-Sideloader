@@ -17,7 +17,7 @@ How to use:
 Texture .PNGs can be placed in the Texture2D folder, the SideLoader will automatically replace the originals by matching the name.
 
 * Put your texture .PNGs in the "Mods\Resources\Texture2D\" folder
-* They must have the exact name that the game uses for them. 
+* They must have the exact name that the game uses for them. This file will almost always begin with the prefix "tex_"
 * I recommend unpacking the game with uTiny ripper and looking in the "Texture2D" folder to get a full list of all texture names, as well as the original PNGs themselves.
 
 Nine Dots use a custom shader, and the material names are set like so:
