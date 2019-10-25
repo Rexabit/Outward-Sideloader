@@ -19,16 +19,23 @@ Texture .PNGs can be placed in the Texture2D folder, the SideLoader will automat
 * Put your texture .PNGs in the "Mods\Resources\Texture2D\" folder
 * They must have the exact name that the game uses for them. 
 * I recommend unpacking the game with uTiny ripper and looking in the "Texture2D" folder to get a full list of all texture names, as well as the original PNGs themselves.
-* Currently you can edit the main texture (usually "texturename\_d.png", or just "texturename.png")
-* You can also edit the \_n.png (normal or height map version), but you must also include the main texture as well or no changes will be made.
+
+Nine Dots use a custom shader, and the material names are set like so:
+* "_MainTex" ("name_d.png" or "name.png") : Albedo (RGB) and Transparency (A).
+* "_NormTex" ("name_n.png"): Normal map (bump map)
+* "_GenTex" ("name_g.png" or "name_m.png"): Specular (R), Gloss (G), Occlusion (B).
+* "_SpecColorTex" ("name_sc.png") : used to add color to the specular map in some cases (RGB)
+* "_Emissive" ("name_e.png") : Emissive map (glow map)
+
+When replacing anything other than the Main Texture, you must ALSO include the main texture otherwise no changes will be made. You do not need to make any changes to the main texture.
 
 ### Custom Asset Bundles ###
 Modders can use this tool to conveniently load and manage asset bundles, for use in their own C# mods.
 
-If you are using asset bundles to define custom items using the Custom Items feature, see below.
-
 * You MUST be on the same version of Unity that the game uses. This is currently 5.6.1, soon will be 2018.4
 * Look at this Docs page if you're new to AssetBundles: https://docs.unity3d.com/Manual/AssetBundles-Workflow.html
+
+To use the loaded Asset Bundles in your own C# mods:
 * Add a reference to SideLoader.dll (from Outward\Mods\) to your project
 * Put "Using SideLoader;" at the top of your C# file
 * You can now access the SideLoader from "SL.Instance"
@@ -40,9 +47,11 @@ If you are using asset bundles to define custom items using the Custom Items fea
 ### Custom Items ###
 Note: I have included an example Resources folder, which shows how to set up a custom weapon. Extract this and merge it with your Mods\Resources folder, and have a look how things are set up.
 
-You can define custom items by creating a "myitemname.json" file in the CustomItems folder, following one of the following templates.
+You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All JSON files inside the CustomItems folder will be loaded and created automatically.
 
 #### Notes about Custom Visual Prefabs ####
+
+The Custom Visual Prefabs are entirely optional. If you do not wish to set one for your custom item, simply set all the relevant fields to blank ("").
 
 Some knowledge about Unity is recommended if you plan on setting up your own custom visuals. You'll need to import an .fbx mesh, create a GameObject prefab out of it, and assign that prefab to an asset bundle. 
 
