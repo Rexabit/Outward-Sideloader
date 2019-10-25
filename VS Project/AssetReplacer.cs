@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -32,13 +33,17 @@ namespace SideLoader
                 // set maintexture (diffuse map)
                 m.mainTexture = script.TextureData[name];
 
-                // ======= bump map =======                
-                if (name.EndsWith("_d")) { name = name.Substring(0, name.Length - 2); } // try remove the _d suffix, if its there                
-                name += "_n";  // add the _n (normal map)
-                if (script.TextureData.ContainsKey(name))
+                // ======= set other shader material layers =======     
+                if (name.EndsWith("_d")) { name = name.Substring(0, name.Length - 2); } // try remove the _d suffix, if its there
+
+                // check each shader material suffix name
+                foreach (KeyValuePair<string, string> entry in Suffixes)
                 {
-                    SideLoader.Log("  -- Setting bump map for " + m.name);
-                    m.SetTexture("_BumpMap", script.TextureData[name]);
+                    if (script.TextureData.ContainsKey(name + entry.Key))
+                    {
+                        SideLoader.Log(" - Setting " + entry.Value + " for " + m.name);
+                        m.SetTexture(entry.Value, script.TextureData[name + entry.Key]);
+                    }
                 }
 
                 yield return null;
@@ -46,12 +51,20 @@ namespace SideLoader
 
             // ============ something else... ============
 
-
             // ==============================================
 
             SideLoader.Log("Active assets replaced. Time: " + (Time.time - start), 0);
             script.Loading = false;
         }
+
+        private static readonly Dictionary<string, string> Suffixes = new Dictionary<string, string>()
+        {
+            { "_n", "_NormTex" },
+            { "_g", "_GenTex" },
+            { "_m", "_GenTex" },
+            { "_sc", "_SpecColorTex" },
+            { "_e", "_Emissive" },
+        };
 
         public IEnumerator LoadTextures()
         {
