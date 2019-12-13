@@ -19,7 +19,8 @@ For all uses of the SideLoader (replacing textures, custom items, custom asset b
 
 An SL Pack is simply a folder with a few sub-folders inside it. Importantly, you must use the correct names and capitalization. The base MyFolderName (name of your SL pack) can contain three folders: AssetBundles, CustomItems and Texture2D. If you don't use a folder you can delete it if you wish.
 
-- MyFolderName
+\- MyFolderName
+
 |- AssetBundles (contains Unity AssetBundle files)
 
 |- CustomItems (contains .json files)
