@@ -18,27 +18,25 @@ namespace SideLoader
             SideLoader.Log("Loading Asset Bundles...");
 
             // get all bundle folders
-            foreach (string dir in script.FilePaths[ResourceTypes.AssetBundle])
+            foreach (string filepath in script.FilePaths[ResourceTypes.AssetBundle])
             {
-                //string bundlename = Path.GetFileName();
-                List<AssetBundle> list = new List<AssetBundle>();
-
-                // get files that don't end in .meta or .manifest (the actual bundles)
-                foreach (string filepath in Directory.GetFiles(script.loadDir + "/AssetBundles/" + dir).Where(x => !x.EndsWith(".manifest") && !x.EndsWith(".meta")))
+                try
                 {
-                    try
+                    var bundle = AssetBundle.LoadFromFile(filepath);
+
+                    if (bundle // not sure if necessary, just to be safe
+                        && bundle is AssetBundle)
                     {
-                        var bundle = AssetBundle.LoadFromFile(filepath);
-                        if (bundle && bundle is AssetBundle) { list.Add(bundle); }
-                    }
-                    catch (Exception e)
-                    {
-                        SideLoader.Log(string.Format("Error loading bundle: {0}\r\nMessage: {1}\r\nStack Trace: {2}", dir, e.Message, e.StackTrace), 1);
+                        script.LoadedBundles.Add(Path.GetFileNameWithoutExtension(filepath), bundle);
+
+                        SideLoader.Log(" - Loaded bundle: " + filepath);
                     }
                 }
+                catch (Exception e)
+                {
+                    SideLoader.Log(string.Format("Error loading bundle: {0}\r\nMessage: {1}\r\nStack Trace: {2}", filepath, e.Message, e.StackTrace), 1);
+                }
 
-                script.LoadedBundles.Add(dir, list);
-                SideLoader.Log(" - Loaded folder: " + dir);
                 yield return null;
             }
 

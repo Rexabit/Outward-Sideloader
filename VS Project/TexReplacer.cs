@@ -8,7 +8,7 @@ using System.IO;
 
 namespace SideLoader
 {
-    public class AssetReplacer : MonoBehaviour
+    public class TexReplacer : MonoBehaviour
     {
         public SideLoader script; 
 
@@ -72,15 +72,9 @@ namespace SideLoader
             SideLoader.Log("Reading Texture2D data...");
             float start = Time.time;
 
-            var filesToRead = script.FilePaths[ResourceTypes.Texture];
-
-            foreach (string file in filesToRead)
+            foreach (string file in script.FilePaths[ResourceTypes.Texture])
             {
-                string fullPath = script.loadDir + @"\" + ResourceTypes.Texture + @"\" + file;
-                if (!File.Exists(fullPath))
-                    continue;
-
-                Texture2D texture2D = LoadPNG(fullPath);
+                Texture2D texture2D = LoadPNG(file);
 
                 script.TextureData.Add(Path.GetFileNameWithoutExtension(file), texture2D);
 

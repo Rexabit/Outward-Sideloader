@@ -19,7 +19,7 @@ namespace SideLoader
 
         public GameObject obj;
         public string ID = "OTW_SideLoader";
-        public double version = 1.1;
+        public double version = 1.3;
 
         public SL()
         {
@@ -54,30 +54,29 @@ namespace SideLoader
 
         // components
         public AssetBundleLoader BundleLoader;
-        public AssetReplacer Replacer;
+        public TexReplacer TexReplacer;
         public CustomItems CustomItems;
-        //public SLGUI gui;
 
         // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
         private bool SceneChangeFlag;
 
         // main directory stuff
-        public string loadDir = @"Mods\Resources";
+        public string loadDir = @"Mods\SideLoader";
         public string[] directories;
-        public string[] SupportedFolders =  // List of supported stuff we can sideload 
+        public string[] SupportedResources =  // List of supported stuff we can sideload. Also the name used for subfolders in SideLoader mod packs. 
         {
             ResourceTypes.Texture,
             ResourceTypes.AssetBundle,
             ResourceTypes.CustomItems
         };       
-        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Category : list of files in category
+        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Key: Category, Value: list of files in category
         
         // textures
-        public Dictionary<string, Texture2D> TextureData = new Dictionary<string, Texture2D>();  // FileName : data of texture files
+        public Dictionary<string, Texture2D> TextureData = new Dictionary<string, Texture2D>();  // Key: File Name, Value: data of texture files
 
         // asset bundles
-        public Dictionary<string, List<AssetBundle>> LoadedBundles = new Dictionary<string, List<AssetBundle>>(); //  Folder Name: list of Asset Bundles in folder
+        public Dictionary<string, AssetBundle> LoadedBundles = new Dictionary<string, AssetBundle>(); //  Key: bundle Name, Value: actual AssetBundle
 
         // custom items
         public Dictionary<int, Item> LoadedCustomItems = new Dictionary<int, Item>();
@@ -103,7 +102,7 @@ namespace SideLoader
                     CurrentScene = SceneManagerHelper.ActiveSceneName;
                     SceneChangeFlag = false;
 
-                    StartCoroutine(Replacer.ReplaceActiveAssets());
+                    StartCoroutine(TexReplacer.ReplaceActiveAssets());
                 }
             }
         }
@@ -114,7 +113,7 @@ namespace SideLoader
 
             // Add Components
             BundleLoader = _base.obj.AddComponent(new AssetBundleLoader { script = this });
-            Replacer = _base.obj.AddComponent(new AssetReplacer { script = this });
+            TexReplacer = _base.obj.AddComponent(new TexReplacer { script = this });
             CustomItems = _base.obj.AddComponent(new CustomItems { script = this });
             //gui = _base.obj.AddComponent(new SLGUI { script = this });
 
@@ -123,7 +122,7 @@ namespace SideLoader
 
             // load texture changes
             Loading = true;
-            StartCoroutine(Replacer.LoadTextures());
+            StartCoroutine(TexReplacer.LoadTextures());
             while (Loading) { yield return null; } // wait for loading callback to be set to false
 
             // load asset bundles
@@ -140,7 +139,7 @@ namespace SideLoader
 
             // Check currently loaded assets and replace what we can
             Loading = true;
-            StartCoroutine(Replacer.ReplaceActiveAssets());
+            StartCoroutine(TexReplacer.ReplaceActiveAssets());
             while (Loading) { yield return null; }
 
             Log("Finished initialization.", 0);
@@ -150,27 +149,41 @@ namespace SideLoader
         private void CheckFolders()
         {
             int i = 0;
-            foreach (string dir in SupportedFolders)
+
+            Log("Checking for SideLoader packs...");
+
+            foreach (string pack in Directory.GetDirectories(loadDir))
             {
-                // Make sure we have the key initialized
-                if (!FilePaths.ContainsKey(dir))
-                    FilePaths.Add(dir, new List<string>());
+                Log("Checking pack " + pack + "...");
 
-                string dirPath = loadDir + @"\" + dir;
-
-                if (!Directory.Exists(dirPath))
-                    continue;
-
-                bool flag = dir == ResourceTypes.AssetBundle; 
-
-                string[] paths = flag ? Directory.GetDirectories(dirPath) : Directory.GetFiles(dirPath);
-
-                foreach (string s in paths)
+                foreach (string resourceType in SupportedResources)
                 {
-                    string assetPath = flag ? new DirectoryInfo(s).Name : new FileInfo(s).Name;
-                    FilePaths[dir].Add(assetPath);
+                    // Make sure we have the key initialized
+                    if (!FilePaths.ContainsKey(resourceType))
+                        FilePaths.Add(resourceType, new List<string>());
 
-                    i++; // add to total asset counter
+                    string dirPath = pack + @"\" + resourceType;
+
+                    if (!Directory.Exists(dirPath))
+                    {
+                        Log("Directory \"" + dirPath + "\"does not exist! This may not be an error.");
+                        continue;
+                    }
+
+                    string[] paths = Directory.GetFiles(dirPath);
+
+                    foreach (string s in paths)
+                    {
+                        if (resourceType == "AssetBundles" && s.EndsWith(".manifest"))
+                        {
+                            continue;
+                        }
+
+                        string assetPath = new FileInfo(s).Name;
+                        FilePaths[resourceType].Add(dirPath + @"\" + assetPath);
+
+                        i++; // add to total asset counter
+                    }
                 }
             }
 

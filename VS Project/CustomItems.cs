@@ -20,7 +20,7 @@ namespace SideLoader
 
             foreach (string path in script.FilePaths[ResourceTypes.CustomItems])
             {
-                string json = File.ReadAllText(script.loadDir + @"\CustomItems\" + path);
+                string json = File.ReadAllText(path);
 
                 try
                 {
@@ -52,15 +52,23 @@ namespace SideLoader
             SideLoader.Log("Loaded custom items", 0);
 
             // custom recipes
-            foreach (string path in Directory.GetFiles(script.loadDir + @"\CustomItems\Recipes"))
+            foreach (string path in Directory.GetDirectories(script.loadDir))
             {
-                string json = File.ReadAllText(path);
-
-                if (JsonUtility.FromJson<CustomRecipe>(json) is CustomRecipe template)
+                if (!Directory.Exists(path + @"\CustomItems\Recipes"))
                 {
-                    DefineRecipe(template.Result_ItemID, template.CraftingType, template.Ingredient_ItemIDs);
+                    continue;
                 }
-                yield return null;
+
+                foreach (string path2 in Directory.GetFiles(path + @"\CustomItems\Recipes"))
+                {
+                    string json = File.ReadAllText(path2);
+
+                    if (JsonUtility.FromJson<CustomRecipe>(json) is CustomRecipe template)
+                    {
+                        DefineRecipe(template.Result_ItemID, template.CraftingType, template.Ingredient_ItemIDs);
+                    }
+                    yield return null;
+                }
             }
 
             script.Loading = false;
@@ -127,11 +135,11 @@ namespace SideLoader
 
                     if (!string.IsNullOrEmpty(template.AssetBundle_Name) && !string.IsNullOrEmpty(template.VisualPrefabName) && script.LoadedBundles.ContainsKey(template.AssetBundle_Name))
                     {
-                        foreach (AssetBundle bundle in script.LoadedBundles[template.AssetBundle_Name])
+                        if (script.LoadedBundles.ContainsKey(template.AssetBundle_Name) && script.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
                         {
                             // check if this asset bundle contains our custom object
                             if (!(bundle.LoadAsset<GameObject>(template.VisualPrefabName) is GameObject customModel))
-                            { continue; } // wrong assetbundle
+                            { return; }
 
                             // disable the original mesh first. 
                             foreach (Transform child in newVisuals)
@@ -153,8 +161,6 @@ namespace SideLoader
                                 newModel.transform.position = template.Visual_PosOffset;
                                 newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
                             }
-
-                            break;
                         }
                     }
                 }
@@ -164,11 +170,11 @@ namespace SideLoader
                     // check if user defined a custom armorvisuals
                     if (!string.IsNullOrEmpty(template.AssetBundle_Name) && !string.IsNullOrEmpty(template.ArmorVisualPrefabName) && script.LoadedBundles.ContainsKey(template.AssetBundle_Name))
                     {
-                        foreach (AssetBundle bundle in script.LoadedBundles[template.AssetBundle_Name])
+                        if (script.LoadedBundles.ContainsKey(template.AssetBundle_Name) && script.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
                         {
                             // check if this asset bundle contains our custom object
                             if (!(bundle.LoadAsset<GameObject>(template.ArmorVisualPrefabName) is GameObject customModel))
-                            { continue; } // wrong assetbundle
+                            { return; }
 
                             // set up our new model
                             GameObject newModel = Instantiate(customModel);
@@ -193,8 +199,6 @@ namespace SideLoader
                             // fix rotation and pos
                             newModel.transform.position = template.Visual_PosOffset;
                             newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
-
-                            break;
                         }
                     }
                     else
@@ -374,7 +378,7 @@ namespace SideLoader
         }
     }
 
-    public class CustomItem // TODO: IMPLEMENT THESE BASE/DERIVED CLASSES
+    public class CustomItem
     {
         // item ID
         public int New_ItemID;
