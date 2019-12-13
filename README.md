@@ -21,8 +21,11 @@ An SL Pack is simply a folder with a few sub-folders inside it. Importantly, you
 
 - MyFolderName
 |- AssetBundles (contains Unity AssetBundle files)
+
 |- CustomItems (contains .json files)
+
    |- Recipes (contains .json files)
+   
 |- Texture2D (contains .png files)
 
 Once your SL pack is ready, simply place it in Mods\SideLoader\ and it will be applied on launch.
