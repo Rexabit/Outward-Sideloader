@@ -13,12 +13,31 @@ How to use:
 * For BepInEx, move "SideLoader.dll" to "Outward\BepInEx\plugins\\", and install the BepInEx Partiality wrapper.
 * That's it! Follow specific instructions below for more info.
 
+## Creating SideLoader Packs ##
+
+For all uses of the SideLoader (replacing textures, custom items, custom asset bundles, etc) you will need to make a SideLoader pack.
+
+An SL Pack is simply a folder with a few sub-folders inside it. Importantly, you must use the correct names and capitalization. The base MyFolderName (name of your SL pack) can contain three folders: AssetBundles, CustomItems (+Recipes) and Texture2D. If you don't use a folder you can delete it if you wish.
+
+```
+- MyFolderName
+ |- AssetBundles (contains Unity AssetBundle files)
+ |- CustomItems (contains .json files)
+    |- Recipes (contains .json files)
+ |- Texture2D (contains .png files)
+```
+
+If you download this repository, an example folder is included to use as a template if you wish.
+
+Once your SL pack is ready, simply place it in Mods\SideLoader\ and it will be applied on launch.
+
 ### Replacing Texture .PNGs (Materials) ###
-Texture .PNGs can be placed in the Texture2D folder, the SideLoader will automatically replace the originals by matching the name.
+Texture .PNGs can be placed in the Texture2D folder of your SL Pack, the SideLoader will automatically replace the originals by matching the name.
+
+Important: Use uTiny Ripper to unpack the game and get all textures, this way it ensures they are already named correctly.
 
 * Put your texture .PNGs in the "Mods\Resources\Texture2D\" folder
 * They must have the exact name that the game uses for them. This file will almost always begin with the prefix "tex_"
-* I recommend unpacking the game with uTiny ripper and looking in the "Texture2D" folder to get a full list of all texture names, as well as the original PNGs themselves.
 
 Nine Dots use a custom shader, and the material names are set like so:
 * "\_MainTex" ("name_d.png" or "name.png") : Albedo (RGB) and Transparency (A).
@@ -41,15 +60,15 @@ To use the loaded Asset Bundles in your own C# mods:
 * Add a reference to SideLoader.dll (from Outward\Mods\) to your project
 * Put "Using SideLoader;" at the top of your C# file
 * You can now access the SideLoader from "SL.Instance"
-* Put your AssetBundle folder (generated from your Unity Project) in the "Resources\AssetBundles\" folder. It should look like "Resources\AssetBundles\yourbundlename\ [Asset files here]"
-* Before using your assets, check if the "InitDone" int is greater than 0 (SL.Instance.InitDone > 0) first.
-* SL.Instance.LoadedBundles["foldername"] will give you a list of AssetBundles in your folder
+* Put your AssetBundle folder (generated from your Unity Project) in the "AssetBundles" folder of your mod pack.
+* Before using your assets, check if SL.Instance.InitDone is greater than 0 first (if SL.Instance.InitDone > 0...)
+* SL.Instance.LoadedBundles["bundlename"] will return your asset bundle. 
 * Follow standard Unity procedure for instantiating objects from your AssetBundles as needed.
 
 ### Custom Items ###
-Note: I have included an example Resources folder, which shows how to set up a custom weapon. Extract this and merge it with your Mods\Resources folder, and have a look how things are set up.
-
 You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All items defined in this folder will be loaded and added to the game's systems automatically.
+
+Note: I have included an example SL Pack folder for custom items, which shows how to set up a weapon. You can place this SL Pack folder in the Mods\SideLoader folder, and have a look how things are set up.
 
 #### Notes about Custom Visual Prefabs ####
 
