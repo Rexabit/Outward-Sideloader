@@ -36,8 +36,14 @@ Texture .PNGs can be placed in the Texture2D folder of your SL Pack, the SideLoa
 
 Important: Use uTiny Ripper to unpack the game and get all textures, this way it ensures they are already named correctly.
 
-* Put your texture .PNGs in the "Mods\Resources\Texture2D\" folder
-* They must have the exact name that the game uses for them. This file will almost always begin with the prefix "tex_"
+Here's a quick example on the workflow:
+* Unpack textures with uTiny Ripper
+* Find the texture you want inside the Texture2D folder
+* Make changes as desired
+* Create a folder called "MyTexturePack", then inside this folder, create a "Texture2D" folder
+* Place your modified texture in the Texture2D folder. It must have the EXACT name that it had originally!
+* Place your MyTexturePack folder inside Outward\Mods\SideLoader\
+* Done!
 
 Nine Dots use a custom shader, and the material names are set like so:
 * "\_MainTex" ("name_d.png" or "name.png") : Albedo (RGB) and Transparency (A).
