@@ -96,14 +96,14 @@ All Custom Items have the following parameters. If you're just defining a generi
     "HelmetHideHair": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
     },
     "Visual_RotOffset": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
     },
     "Name": "My Item Name",
     "Description": "My Description.",
@@ -135,6 +135,8 @@ The next few settings apply to the custom visuals. If you're not using any, just
 ``HelmetHideHair`` : For Helmets only. 'true' to hide hair when equipped, 'false' to show.
 
 ``ItemIconName`` : The ICON NAME (without ".png") of your custom item icon. Place it inside the Texture2D folder.
+
+For the next two settings, there is an important thing to note. Any value OTHER than "(-1, -1, -1)" will allow you to custom align the visual model position and rotation. If you leave it to -1,-1,-1 it will copy the values that your CloneTarget uses.
 
 ``Visual_PosOffset`` : The Vector3 transform position offset of your visuals, mainly for aligning weapons and armor.
 
@@ -168,14 +170,14 @@ You can define a custom equipment such as armor, bags etc. with the following te
     "HelmetHideHair": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
     },
     "Visual_RotOffset": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
     },
     "Name": "My Item Name",
     "Description": "My Description.",
@@ -250,14 +252,14 @@ For Custom Weapons, use the following template:
     "HelmetHideHair": false,
     "ItemIconName": "MyIconName",
     "Visual_PosOffset": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
     },
     "Visual_RotOffset": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
     },
     "Name": "My Item Name",
     "Description": "My Description.",
