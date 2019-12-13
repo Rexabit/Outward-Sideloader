@@ -141,12 +141,18 @@ namespace SideLoader
                             if (!(bundle.LoadAsset<GameObject>(template.VisualPrefabName) is GameObject customModel))
                             { return; }
 
+                            Vector3 origPos = Vector3.zero;
+                            Vector3 origRot = Vector3.zero;
+
                             // disable the original mesh first. 
                             foreach (Transform child in newVisuals)
                             {
                                 // only the actual item visual will have both these components. will not disable particle fx or anything else.
                                 if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>())
                                 {
+                                    origPos = child.transform.position;
+                                    origRot = child.transform.rotation.eulerAngles;
+
                                     child.gameObject.SetActive(false);
                                 }
                             }
@@ -157,9 +163,25 @@ namespace SideLoader
 
                             if (!(item is Armor)) // dont fix here for armor, the setting is used for the ArmorVisualPrefab
                             {
-                                // fix rotation and pos
-                                newModel.transform.position = template.Visual_PosOffset;
-                                newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
+                                // if user set it to -1-1-1, just use orig model pos
+                                if (template.Visual_PosOffset == new Vector3(-1, -1, -1))
+                                {
+                                    newModel.transform.position = origPos;
+                                }
+                                else
+                                {
+                                    // fix rotation and pos
+                                    newModel.transform.position = template.Visual_PosOffset;
+                                } 
+                                
+                                if (template.Visual_RotOffset == new Vector3(-1, -1, -1))
+                                {
+                                    newModel.transform.rotation = Quaternion.Euler(origRot);
+                                }
+                                else
+                                {
+                                    newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
+                                }
                             }
                         }
                     }
