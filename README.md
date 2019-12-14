@@ -212,7 +212,7 @@ You can define a custom equipment such as armor, bags etc. with the following te
 {
     "New_ItemID": 0000000,
     "CloneTarget_ItemID": 0000000,
-    "AssetBundle_Name": "MyBundleFolder",
+    "AssetBundle_Name": "MyBundle",
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
     "HelmetHideFace": false,
@@ -294,7 +294,7 @@ For Custom Weapons, use the following template:
 {
     "New_ItemID": 0000000,
     "CloneTarget_ItemID": 0000000,
-    "AssetBundle_Name": "MyBundleFolder",
+    "AssetBundle_Name": "MyBundle",
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "",
     "HelmetHideFace": false,
