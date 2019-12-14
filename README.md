@@ -131,14 +131,14 @@ Or if you want more control over the process, you can do each step individually:
 * SetEquipmentStats
 * SetWeaponStats
 
-#### JSON: Item Base (Important) ####
+#### JSON: Item Base ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
 
 ```
 {
     "New_ItemID": 0000000,
     "CloneTarget_ItemID": 0000000,
-    "AssetBundle_Name": "MyBundleFolder",
+    "AssetBundle_Name": "MyBundle" 
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
     "HelmetHideFace": false,
