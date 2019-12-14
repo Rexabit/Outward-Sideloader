@@ -167,13 +167,13 @@ First, we'll define our new Item ID, and the item we will be using for a base.
 The next few settings apply to the custom visuals. If you're not using any, just leave these blank ("")
 
 
-``AssetBundle_Name`` : The FOLDER NAME which contains your asset bundle for your visual prefab. This folder must be inside the AssetBundles folder.
+``AssetBundle_Name`` : The FILE NAME of your asset bundle for your visual prefab. This file must be inside the AssetBundles folder.
 
-``VisualPrefabName`` : The UNIQUE PREFAB NAME of your custom item visuals. It can be inside ANY asset bundle in your folder.
+``VisualPrefabName`` : The UNIQUE PREFAB NAME of your custom item visuals. It must be inside the AssetBundle you listed above.
 
 ``ArmorVisualPrefabName`` : Only for armor. This is the special Skinned Mesh version of your armor visual prefab, used when it is equipped. For weapons and other items, just put "".
 
-``HelmetHideFace`` : For Helmets only. 'true' to hide the player's face when equipped, false to show.
+``HelmetHideFace`` : For Helmets only. 'true' to hide the player's face when equipped, 'false' to show.
 
 ``HelmetHideHair`` : For Helmets only. 'true' to hide hair when equipped, 'false' to show.
 
