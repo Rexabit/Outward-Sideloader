@@ -94,14 +94,16 @@ If you don't set your own Visual Prefab, the SideLoader will rename the material
 
 For most items, weapons, and "ground items" (when you drop an item), the format is like so:
 
-* ``tex_itm_[ItemID]_[ItemName]_d.png`` for the main texture.
-* See above for the suffixes used for other textures (\_e, \_, \_sc etc).
+* ``tex_itm_[ItemID]_[ItemName]_[suffix].png``
+* ``_d`` is the suffix for main texture. See above for the suffixes used for other textures (\_e, \_g, \_sc etc).
 
 For Armor Visuals, the format is:
 
-* ``tex_cha_[ItemID]_[ItemName]_d.png`` for the main texture.
+* ``tex_cha_[ItemID]_[ItemName]_[suffix].png`` for the main texture.
 
 [ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name.
+
+As an example, "tex_itm_1234567_myItemName_d.png" for a normal item, main texture. For armor, "tex_cha_1234567_myItemName_d.png" would be applied to the main texture when it is equipped.
 
 #### Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
