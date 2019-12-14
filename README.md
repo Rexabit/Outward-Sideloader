@@ -105,6 +105,24 @@ For Armor Visuals, the format is:
 
 As an example, "tex_itm_1234567_myItemName_d.png" for a normal item, main texture. For armor, "tex_cha_1234567_myItemName_d.png" would be applied to the main texture when it is equipped.
 
+#### Defining Items from C# ####
+
+If you wish, it is possible to use the SL.Instance.CustomItems class to define your own items at runtime with C#.
+
+There are three main functions which can handle the entire process:
+* ApplyCustomItem
+* SetEquipmentStats
+* SetWeaponStats
+
+Or if you want more control over the process, you can do each step individually:
+* CloneItem
+* SetNameAndDesc
+* SetItemIcon
+* SetItemVisualPrefab (armor may need this executed twice, if you change the worn item and the ground item)
+* SetBaseItemStats
+* SetEquipmentStats
+* SetWeaponStats
+
 #### Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
 
