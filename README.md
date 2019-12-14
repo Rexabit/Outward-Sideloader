@@ -123,7 +123,7 @@ Or if you want more control over the process, you can do each step individually:
 * SetEquipmentStats
 * SetWeaponStats
 
-#### Item Base (Important) ####
+#### JSON: Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
 
 ```
