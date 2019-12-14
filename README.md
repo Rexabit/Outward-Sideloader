@@ -88,6 +88,21 @@ Importantly, the custom visuals must:
 
 All assets which are used for your custom visuals must also be included in the same asset bundle.
 
+#### If you DO NOT set a Visual Prefab: ####
+
+If you don't set your own Visual Prefab, the SideLoader will rename the materials for you, so that you are able to at least change the textures without affecting the original item.
+
+For most items, weapons, and "ground items" (when you drop an item), the format is like so:
+
+* ``tex_itm_[ItemID]_[ItemName]_d.png`` for the main texture.
+* See above for the suffixes used for other textures (\_e, \_, \_sc etc).
+
+For Armor Visuals, the format is:
+
+* ``tex_cha_[ItemID]_[ItemName]_d.png`` for the main texture.
+
+[ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name.
+
 #### Item Base (Important) ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
 
