@@ -101,7 +101,7 @@ For most items, weapons, and "ground items" (when you drop an item), the format 
 
 For Armor Visuals, the format is:
 
-* ``tex_cha_[ItemID]_[ItemName]_[suffix].png`` for the main texture.
+* ``tex_cha_[ItemID]_[ItemName]_[suffix].png`` 
 
 [ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name.
 
