@@ -166,7 +166,6 @@ namespace SideLoader
 
                     if (!Directory.Exists(dirPath))
                     {
-                        Log("Directory \"" + dirPath + "\"does not exist! This may not be an error.");
                         continue;
                     }
 

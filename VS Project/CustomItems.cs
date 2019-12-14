@@ -34,11 +34,11 @@ namespace SideLoader
 
                     if (target is Weapon)
                     {
-                        ApplyCustomWeapon(JsonUtility.FromJson<CustomWeapon>(json));
+                        SetWeaponStats(JsonUtility.FromJson<CustomWeapon>(json));
                     }
                     else if (target is Equipment)
                     {
-                        ApplyCustomEquipment(JsonUtility.FromJson<CustomEquipment>(json));
+                        SetEquipmentStats(JsonUtility.FromJson<CustomEquipment>(json));
                     }
                 }
                 catch (Exception e)
@@ -75,42 +75,19 @@ namespace SideLoader
             SideLoader.Log("Loaded custom recipes", 0);
         }
 
-        private void ApplyCustomItem(CustomItem template)
+        public void ApplyCustomItem(CustomItem template)
         {
             if (ResourcesPrefabManager.Instance.GetItemPrefab(template.CloneTarget_ItemID) is Item origItem)
             {
                 SideLoader.Log("  - Applying template for " + template.Name);
 
                 // clone it, set inactive, and dont destroy on load
-                GameObject newItem = Instantiate(origItem.gameObject);
-                newItem.SetActive(false);
-                DontDestroyOnLoad(newItem);
-
-                // get the Item component and set our custom ID first
-                Item item = newItem.GetComponent<Item>();
-                item.ItemID = template.New_ItemID;
+                Item item = CloneItem(origItem, template.New_ItemID);
 
                 // set name and description
                 string name = template.Name;
                 string desc = template.Description;
                 SetNameAndDesc(item, name, desc);
-
-                // fix ResourcesPrefabManager dictionary
-                if (At.GetValue(typeof(ResourcesPrefabManager), null, "ITEM_PREFABS") is Dictionary<string, Item> Items)
-                {
-                    if (Items.ContainsKey(item.ItemID.ToString()))
-                    {
-                        Items[item.ItemID.ToString()] = item;
-                    }
-                    else
-                    {
-                        Items.Add(item.ItemID.ToString(), item);
-                    }
-
-                    At.SetValue(Items, typeof(ResourcesPrefabManager), null, "ITEM_PREFABS");
-
-                    SideLoader.Log(string.Format("Added {0} to RPM dictionary.", item.Name));
-                }
 
                 // set item icon
                 if (!string.IsNullOrEmpty(template.ItemIconName))
@@ -118,132 +95,101 @@ namespace SideLoader
                     Texture2D icon = script.TextureData[template.ItemIconName];
                     if (icon)
                     {
-                        Sprite newIcon = Sprite.Create(icon, new Rect(0, 0, icon.width, icon.height), Vector2.zero);
-                        At.SetValue(newIcon, typeof(Item), item, "m_itemIcon");
+                        SetItemIcon(item, icon);
                     }
                 }
 
-                // for item visuals that are not ArmorVisuals
-                if (item.VisualPrefab)
+                bool noVisualsFlag = false;
+                bool noArmorVisualsFlag = false;
+
+                // check if AssetBundle name is defined
+                if (!string.IsNullOrEmpty(template.AssetBundle_Name) 
+                    && script.LoadedBundles.ContainsKey(template.AssetBundle_Name)
+                    && script.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
                 {
-                    // clone the visual prefab so we can modify it without affecting the original item
-                    Transform newVisuals = Instantiate(item.VisualPrefab);
-
-                    newVisuals.gameObject.SetActive(false);
-                    DontDestroyOnLoad(newVisuals);
-                    item.VisualPrefab = newVisuals;
-
-                    if (!string.IsNullOrEmpty(template.AssetBundle_Name) && !string.IsNullOrEmpty(template.VisualPrefabName) && script.LoadedBundles.ContainsKey(template.AssetBundle_Name))
+                    // set normal visual prefab
+                    if (!string.IsNullOrEmpty(template.VisualPrefabName) 
+                        && bundle.LoadAsset<GameObject>(template.VisualPrefabName) is GameObject customModel)
                     {
-                        if (script.LoadedBundles.ContainsKey(template.AssetBundle_Name) && script.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
+                        Vector3 posoffset = template.Visual_PosOffset;
+                        Vector3 rotoffset = template.Visual_RotOffset;
+
+                        // setting armor "ground item" visuals, dont use the user's values here.
+                        if (item is Armor)
                         {
-                            // check if this asset bundle contains our custom object
-                            if (!(bundle.LoadAsset<GameObject>(template.VisualPrefabName) is GameObject customModel))
-                            { return; }
-
-                            Vector3 origPos = Vector3.zero;
-                            Vector3 origRot = Vector3.zero;
-
-                            // disable the original mesh first. 
-                            foreach (Transform child in newVisuals)
-                            {
-                                // only the actual item visual will have both these components. will not disable particle fx or anything else.
-                                if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>())
-                                {
-                                    origPos = child.transform.position;
-                                    origRot = child.transform.rotation.eulerAngles;
-
-                                    child.gameObject.SetActive(false);
-                                }
-                            }
-
-                            // set up our new model
-                            GameObject newModel = Instantiate(customModel);
-                            newModel.transform.parent = newVisuals.transform;
-
-                            if (!(item is Armor)) // dont fix here for armor, the setting is used for the ArmorVisualPrefab
-                            {
-                                // if user set it to -1-1-1, just use orig model pos
-                                if (template.Visual_PosOffset == new Vector3(-1, -1, -1))
-                                {
-                                    newModel.transform.position = origPos;
-                                }
-                                else
-                                {
-                                    // fix rotation and pos
-                                    newModel.transform.position = template.Visual_PosOffset;
-                                } 
-                                
-                                if (template.Visual_RotOffset == new Vector3(-1, -1, -1))
-                                {
-                                    newModel.transform.rotation = Quaternion.Euler(origRot);
-                                }
-                                else
-                                {
-                                    newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
-                                }
-                            }
+                            posoffset = new Vector3(-1, -1, -1);
+                            rotoffset = new Vector3(-1, -1, -1);
                         }
-                    }
-                }
 
-                if (item.SpecialVisualPrefab)
-                {
-                    // check if user defined a custom armorvisuals
-                    if (!string.IsNullOrEmpty(template.AssetBundle_Name) && !string.IsNullOrEmpty(template.ArmorVisualPrefabName) && script.LoadedBundles.ContainsKey(template.AssetBundle_Name))
-                    {
-                        if (script.LoadedBundles.ContainsKey(template.AssetBundle_Name) && script.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
-                        {
-                            // check if this asset bundle contains our custom object
-                            if (!(bundle.LoadAsset<GameObject>(template.ArmorVisualPrefabName) is GameObject customModel))
-                            { return; }
-
-                            // set up our new model
-                            GameObject newModel = Instantiate(customModel);
-
-                            DontDestroyOnLoad(newModel);
-                            newModel.gameObject.SetActive(false);
-                            item.SpecialVisualPrefabDefault = newModel.transform;
-
-                            ArmorVisuals visuals = newModel.AddComponent<ArmorVisuals>();
-
-                            if (item is Armor armor && armor.EquipSlot == EquipmentSlot.EquipmentSlotIDs.Helmet)
-                            {
-                                visuals.HideFace = template.HelmetHideFace;
-                                visuals.HideHair = template.HelmetHideHair;
-                            }
-
-                            foreach (MeshRenderer mesh in newModel.GetComponents<MeshRenderer>())
-                            {
-                                DestroyImmediate(mesh);
-                            }
-
-                            // fix rotation and pos
-                            newModel.transform.position = template.Visual_PosOffset;
-                            newModel.transform.rotation = Quaternion.Euler(template.Visual_RotOffset);
-                        }
+                        SetItemVisualPrefab(item, item.VisualPrefab, customModel.transform, posoffset, rotoffset);
                     }
                     else
                     {
-                        // clone the visual prefab so we can modify it without affecting the original item
-                        Transform newVisuals = Instantiate(item.SpecialVisualPrefabDefault);
+                        // no visual prefab to set. clone the original and rename the material.
 
-                        newVisuals.gameObject.SetActive(false);
-                        DontDestroyOnLoad(newVisuals);
-                        item.SpecialVisualPrefabDefault = newVisuals;
+                        noVisualsFlag = true;
+                    }
+
+                    // set armor visual prefab
+                    if (item is Armor)
+                    {
+                        if (!string.IsNullOrEmpty(template.ArmorVisualPrefabName) && bundle.LoadAsset<GameObject>(template.ArmorVisualPrefabName) is GameObject armorModel)
+                        {
+                            SetItemVisualPrefab(item,
+                                item.SpecialVisualPrefabDefault,
+                                armorModel.transform,
+                                template.Visual_PosOffset,
+                                template.Visual_RotOffset,
+                                true,
+                                template.HelmetHideFace,
+                                template.HelmetHideHair);
+                        }
+                        else // no armor prefab to set
+                        {
+                            noArmorVisualsFlag = true;
+                        }
+                    }                        
+                }
+                else // no asset bundle.
+                {
+                    noVisualsFlag = true; noArmorVisualsFlag = true;
+                }
+
+                // if we should overwrite normal visual prefab, do that now
+                if (noVisualsFlag)
+                {
+                    Transform newVisuals = Instantiate(item.VisualPrefab);
+                    item.VisualPrefab = newVisuals;
+                    DontDestroyOnLoad(newVisuals);
+
+                    foreach (Transform child in newVisuals)
+                    {
+                        if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
+                        {
+                            string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
+
+                            OverwriteMaterials(mesh.material, newMatName);
+                        }
+                    }
+                }
+
+                // if we should overwrite armor visuals, do that now
+                if (noArmorVisualsFlag)
+                {
+                    Transform newArmorVisuals = Instantiate(item.SpecialVisualPrefabDefault);
+                    item.SpecialVisualPrefabDefault = newArmorVisuals;
+                    DontDestroyOnLoad(newArmorVisuals);
+
+                    if (newArmorVisuals.GetComponent<SkinnedMeshRenderer>() is SkinnedMeshRenderer mesh)
+                    {
+                        string newMatName = "tex_cha_" + template.New_ItemID + "_" + template.Name;
+
+                        OverwriteMaterials(mesh.material, newMatName);
                     }
                 }
 
                 // ========== set custom stats ==========
-
-                if (item.GetComponent<ItemStats>() is ItemStats stats)
-                {
-                    stats.MaxDurability = template.Durability;
-                    At.SetValue(template.BaseValue, typeof(ItemStats), stats, "m_baseValue"); // price  
-                    At.SetValue(template.Weight, typeof(ItemStats), stats, "m_rawWeight");    // weight
-
-                    item.SetStatScript(stats);
-                }
+                SetBaseItemStats(item, template.Durability, template.BaseValue, template.Weight);                
 
                 SideLoader.Log("initialized item " + template.Name, 0);
             }
@@ -253,7 +199,176 @@ namespace SideLoader
             }
         }
 
-        private void ApplyCustomEquipment(CustomEquipment template)
+        public Item CloneItem(Item origItem, int newID)
+        {
+            // clone it, set inactive, and dont destroy on load
+            GameObject newItem = Instantiate(origItem.gameObject);
+            newItem.SetActive(false);
+            DontDestroyOnLoad(newItem);
+
+            // get the Item component and set our custom ID first
+            Item item = newItem.GetComponent<Item>();
+            item.ItemID = newID;
+
+            // fix ResourcesPrefabManager dictionary
+            if (At.GetValue(typeof(ResourcesPrefabManager), null, "ITEM_PREFABS") is Dictionary<string, Item> Items)
+            {
+                if (Items.ContainsKey(item.ItemID.ToString()))
+                {
+                    Items[item.ItemID.ToString()] = item;
+                }
+                else
+                {
+                    Items.Add(item.ItemID.ToString(), item);
+                }
+
+                At.SetValue(Items, typeof(ResourcesPrefabManager), null, "ITEM_PREFABS");
+
+                //SideLoader.Log(string.Format("Added {0} to RPM dictionary.", item.Name));
+            }
+
+            return item;
+        }
+
+        public void SetNameAndDesc(Item item, string name, string desc)
+        {
+            ItemLocalization loc = new ItemLocalization(name, desc);
+
+            At.SetValue(name, typeof(Item), item, "m_name");
+
+            if (At.GetValue(typeof(LocalizationManager), LocalizationManager.Instance, "m_itemLocalization") is Dictionary<int, ItemLocalization> dict)
+            {
+                if (dict.ContainsKey(item.ItemID))
+                {
+                    dict[item.ItemID] = loc;
+                }
+                else
+                {
+                    dict.Add(item.ItemID, loc);
+                }
+                At.SetValue(dict, typeof(LocalizationManager), LocalizationManager.Instance, "m_itemLocalization");
+            }
+        }
+
+        public void SetItemIcon(Item item, Texture2D icon)
+        {
+            Sprite sprite = Sprite.Create(icon, new Rect(0, 0, icon.width, icon.height), Vector2.zero);
+            At.SetValue(sprite, typeof(Item), item, "m_itemIcon");
+        }
+
+        public void SetItemVisualPrefab(Item item, Transform origVisuals, Transform newVisuals, Vector3 position_offset, Vector3 rotation_offset, bool SetSpecialPrefab = false, bool HelmetHideFace = false, bool HelmetHideHair = false)
+        {
+            // clone the visual prefab so we can modify it without affecting the original item
+            Transform clone = Instantiate(origVisuals);
+
+            clone.gameObject.SetActive(false);
+            DontDestroyOnLoad(clone);
+            
+            if (SetSpecialPrefab)
+            {
+                item.SpecialVisualPrefabDefault = clone;
+            }
+            else
+            {
+                item.VisualPrefab = clone;
+            }
+
+            Vector3 origPos = Vector3.zero;
+            Vector3 origRot = Vector3.zero;
+
+            // set up our new model
+            GameObject newModel = Instantiate(newVisuals.gameObject);
+            newModel.transform.parent = clone.transform;
+
+            // if we're setting an Armor Special (worn armor) prefab, handle that logic
+            if (item is Armor && SetSpecialPrefab)
+            {
+                origPos = origVisuals.transform.position;
+                origRot = origVisuals.transform.rotation.eulerAngles;
+
+                ArmorVisuals visuals = newModel.AddComponent<ArmorVisuals>();
+
+                if ((item as Armor).EquipSlot == EquipmentSlot.EquipmentSlotIDs.Helmet)
+                {
+                    visuals.HideFace = HelmetHideFace;
+                    visuals.HideHair = HelmetHideHair;
+                }
+
+                foreach (MeshRenderer mesh in newModel.GetComponents<MeshRenderer>())
+                {
+                    DestroyImmediate(mesh);
+                }
+            }
+            else // setting a normal prefab. disable the original mesh first.
+            { 
+                foreach (Transform child in clone)
+                {
+                    // only the actual item visuals will have both of these components. this will not disable particle fx or anything else.
+                    if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>())
+                    {
+                        origPos = child.transform.position;
+                        origRot = child.transform.rotation.eulerAngles;
+
+                        child.gameObject.SetActive(false);
+
+                        break;
+                    }
+                }
+            }
+
+            // position / rotation stuff
+
+            // if user set it to -1-1-1, just use orig values
+
+            if (position_offset == new Vector3(-1, -1, -1)) { newModel.transform.position = origPos; }
+            else { newModel.transform.position = position_offset; }
+
+            if (rotation_offset == new Vector3(-1, -1, -1)) { newModel.transform.rotation = Quaternion.Euler(origRot); }
+            else { newModel.transform.rotation = Quaternion.Euler(rotation_offset); }
+        }
+
+        private void OverwriteMaterials(Material material, string newName)
+        {
+            Texture newMainTex = Instantiate(material.mainTexture);
+            material.mainTexture = newMainTex;
+            DontDestroyOnLoad(newMainTex);
+
+            // set mainTexture name (_d)
+            newMainTex.name = newName + "_d";
+
+            // check each shader material suffix name
+            foreach (KeyValuePair<string, string> entry in TexReplacer.TextureSuffixes)
+            {
+                if (entry.Key == "_m" || entry.Key == "_i") { continue; }
+
+                if (material.GetTexture(entry.Value) is Texture tex)
+                {
+                    Texture newTex = Instantiate(tex);
+                    DontDestroyOnLoad(newTex);
+
+                    material.SetTexture(entry.Key, newTex);
+
+                    newTex.name = newName + entry.Key;
+                }
+            }
+        }
+
+        public void SetBaseItemStats(Item item, int maxDurability, int baseValue, float weight)
+        {
+            if (item.GetComponent<ItemStats>() is ItemStats stats)
+            {
+                stats.MaxDurability = maxDurability;
+                At.SetValue(baseValue, typeof(ItemStats), stats, "m_baseValue"); // price  
+                At.SetValue(weight, typeof(ItemStats), stats, "m_rawWeight");    // weight
+
+                item.SetStatScript(stats);
+            }
+        }
+
+
+        // these two require a derived type of CustomItem, but they only need the NEW item ID and the relevant fields for Equipment / Weapon stuff
+
+        public void SetEquipmentStats(CustomEquipment template)
         {
             if (ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID) is Item item)
             {
@@ -274,7 +389,7 @@ namespace SideLoader
             }
         }
 
-        private void ApplyCustomWeapon(CustomWeapon template)
+        public void SetWeaponStats(CustomWeapon template)
         {
             if (ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID) is Item item)
             {
@@ -330,6 +445,10 @@ namespace SideLoader
                 }
             }
         }
+      
+
+
+        // custom recipes
 
         public static void DefineRecipe(int ItemID, int craftingType, List<int> IngredientIDs)
         {
@@ -376,28 +495,10 @@ namespace SideLoader
 
                     SideLoader.Log("added " + item.Name + " to custom recipe to dict");
                 }
-            }            
-        }
-
-        private void SetNameAndDesc(Item item, string name, string desc)
-        {
-            ItemLocalization loc = new ItemLocalization(name, desc);
-
-            At.SetValue(name, typeof(Item), item, "m_name");
-
-            if (At.GetValue(typeof(LocalizationManager), LocalizationManager.Instance, "m_itemLocalization") is Dictionary<int, ItemLocalization> dict)
-            {
-                if (dict.ContainsKey(item.ItemID))
-                {
-                    dict[item.ItemID] = loc;
-                }
-                else
-                {
-                    dict.Add(item.ItemID, loc);
-                }
-                At.SetValue(dict, typeof(LocalizationManager), LocalizationManager.Instance, "m_itemLocalization");
             }
         }
+
+
     }
 
     public class CustomItem

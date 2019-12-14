@@ -14,13 +14,23 @@ namespace SideLoader
 
         public IEnumerator ReplaceActiveAssets()
         {
-            SideLoader.Log("Replacing active assets...");
+            SideLoader.Log("Replacing Materials..");
             float start = Time.time;
 
             // ============ materials ============
             var list = Resources.FindObjectsOfTypeAll<Material>()
                         .Where(x => x.mainTexture != null && script.TextureData.ContainsKey(x.mainTexture.name))
                         .ToList();
+
+            if (ResourcesPrefabManager.Instance.GetItemPrefab(1231231) is Armor ArmorTest
+                && ArmorTest.SpecialVisualPrefabDefault.GetComponent<SkinnedMeshRenderer>() is SkinnedMeshRenderer mesh)
+            {
+                SideLoader.Log(mesh.materials[0].mainTexture.name);
+            }
+            else
+            {
+                SideLoader.Log("couldn't find ArmorTest armor mesh...");
+            }
 
             SideLoader.Log(string.Format("Found {0} materials to replace.", list.Count));
 
@@ -37,7 +47,7 @@ namespace SideLoader
                 if (name.EndsWith("_d")) { name = name.Substring(0, name.Length - 2); } // try remove the _d suffix, if its there
 
                 // check each shader material suffix name
-                foreach (KeyValuePair<string, string> entry in Suffixes)
+                foreach (KeyValuePair<string, string> entry in TextureSuffixes)
                 {
                     if (script.TextureData.ContainsKey(name + entry.Key))
                     {
@@ -49,7 +59,6 @@ namespace SideLoader
                 yield return null;
             }
 
-            // ============ something else... ============
 
             // ==============================================
 
@@ -57,7 +66,7 @@ namespace SideLoader
             script.Loading = false;
         }
 
-        private static readonly Dictionary<string, string> Suffixes = new Dictionary<string, string>()
+        public static readonly Dictionary<string, string> TextureSuffixes = new Dictionary<string, string>()
         {
             { "_n", "_NormTex" },
             { "_g", "_GenTex" },
@@ -72,13 +81,14 @@ namespace SideLoader
             SideLoader.Log("Reading Texture2D data...");
             float start = Time.time;
 
-            foreach (string file in script.FilePaths[ResourceTypes.Texture])
+            foreach (string filepath in script.FilePaths[ResourceTypes.Texture])
             {
-                Texture2D texture2D = LoadPNG(file);
+                Texture2D texture2D = LoadPNG(filepath);
 
-                script.TextureData.Add(Path.GetFileNameWithoutExtension(file), texture2D);
+                string texname = Path.GetFileNameWithoutExtension(filepath);
+                script.TextureData.Add(texname, texture2D);
 
-                SideLoader.Log(" - Texture loaded: " + file);
+                SideLoader.Log(" - Texture loaded: " + texname + ", from " + filepath);
 
                 yield return null;
             }
