@@ -17,14 +17,20 @@ How to use:
 
 For all uses of the SideLoader (replacing textures, custom items, custom asset bundles, etc) you will need to make a SideLoader pack.
 
-An SL Pack is simply a folder with a few sub-folders inside it. Importantly, you must use the correct names and capitalization. The base MyFolderName (name of your SL pack) can contain three folders: AssetBundles, CustomItems (+Recipes) and Texture2D. If you don't use a folder you can delete it if you wish.
+An SL Pack is simply a folder with a few sub-folders inside it. Importantly, you must use the correct names and capitalization. The base MyFolderName (name of your SL pack) can contain up to four folders: 
+* "AssetBundles" _(contains Unity AssetBundle files)_
+* "CustomItems" _(contains .json files)_
+* "CustomItems\Recipes" _(contains .json files)_
+* "Texture2D" _(contains .png files)_
+
+If you don't use a folder you can delete it if you wish. The structure should look like this:
 
 ```
 - MyFolderName
- |- AssetBundles (contains Unity AssetBundle files)
- |- CustomItems (contains .json files)
-    |- Recipes (contains .json files)
- |- Texture2D (contains .png files)
+ |- AssetBundles 
+ |- CustomItems 
+    |- Recipes 
+ |- Texture2D 
 ```
 
 If you download this repository, an example folder is included to use as a template if you wish.
@@ -74,6 +80,8 @@ To use the loaded Asset Bundles in your own C# mods:
 ### Custom Items ###
 You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All items defined in this folder will be loaded and added to the game's systems automatically.
 
+You can also define items through C# if you wish, using the SL.Instance.CustomItems class.
+
 Note: I have included an example SL Pack folder for custom items, which shows how to set up a weapon. You can place this SL Pack folder in the Mods\SideLoader folder, and have a look how things are set up.
 
 #### Notes about Custom Visual Prefabs ####
@@ -99,7 +107,7 @@ For most items, weapons, and "ground items" (when you drop an item), the format 
 
 For Armor Visuals, the format is:
 
-* ``tex_cha_[ItemID]_[ItemName]_[suffix].png`` for the main texture.
+* ``tex_cha_[ItemID]_[ItemName]_[suffix].png`` 
 
 [ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name.
 
@@ -123,14 +131,14 @@ Or if you want more control over the process, you can do each step individually:
 * SetEquipmentStats
 * SetWeaponStats
 
-#### JSON: Item Base (Important) ####
+#### JSON: Item Base ####
 All Custom Items have the following parameters. If you're just defining a generic item, use this template:
 
 ```
 {
     "New_ItemID": 0000000,
     "CloneTarget_ItemID": 0000000,
-    "AssetBundle_Name": "MyBundleFolder",
+    "AssetBundle_Name": "MyBundle" 
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
     "HelmetHideFace": false,
@@ -165,13 +173,13 @@ First, we'll define our new Item ID, and the item we will be using for a base.
 The next few settings apply to the custom visuals. If you're not using any, just leave these blank ("")
 
 
-``AssetBundle_Name`` : The FOLDER NAME which contains your asset bundle for your visual prefab. This folder must be inside the AssetBundles folder.
+``AssetBundle_Name`` : The FILE NAME of your asset bundle for your visual prefab. This file must be inside the AssetBundles folder.
 
-``VisualPrefabName`` : The UNIQUE PREFAB NAME of your custom item visuals. It can be inside ANY asset bundle in your folder.
+``VisualPrefabName`` : The UNIQUE PREFAB NAME of your custom item visuals. It must be inside the AssetBundle you listed above.
 
 ``ArmorVisualPrefabName`` : Only for armor. This is the special Skinned Mesh version of your armor visual prefab, used when it is equipped. For weapons and other items, just put "".
 
-``HelmetHideFace`` : For Helmets only. 'true' to hide the player's face when equipped, false to show.
+``HelmetHideFace`` : For Helmets only. 'true' to hide the player's face when equipped, 'false' to show.
 
 ``HelmetHideHair`` : For Helmets only. 'true' to hide hair when equipped, 'false' to show.
 
@@ -204,7 +212,7 @@ You can define a custom equipment such as armor, bags etc. with the following te
 {
     "New_ItemID": 0000000,
     "CloneTarget_ItemID": 0000000,
-    "AssetBundle_Name": "MyBundleFolder",
+    "AssetBundle_Name": "MyBundle",
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "MyArmorVisualPrefabName",
     "HelmetHideFace": false,
@@ -286,7 +294,7 @@ For Custom Weapons, use the following template:
 {
     "New_ItemID": 0000000,
     "CloneTarget_ItemID": 0000000,
-    "AssetBundle_Name": "MyBundleFolder",
+    "AssetBundle_Name": "MyBundle",
     "VisualPrefabName": "MyVisualPrefabName",
     "ArmorVisualPrefabName": "",
     "HelmetHideFace": false,
