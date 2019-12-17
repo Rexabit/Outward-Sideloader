@@ -14,6 +14,57 @@ namespace SideLoader
     {
         public SideLoader script;
 
+        // SetupSkill is an example of how to make a custom Passive skill with AffectStat components. leaving for now.
+
+        //private GameObject SetupSkill()
+        //{
+        //    try
+        //    {
+        //        // create a new GameObject
+        //        GameObject mySkill = new GameObject("TestPassiveSkill");
+        //        DontDestroyOnLoad(mySkill);
+        //        mySkill.SetActive(false);
+
+        //        // basic item initialization (bare minimum)
+        //        PassiveSkill skillComponent = mySkill.AddComponent(new PassiveSkill()
+        //        {
+        //            ItemID = 9996666,
+        //        });
+        //        SL.Instance.CustomItems.SetNameAndDesc(skillComponent as Item, "TestSkill", "Test.");
+
+        //        // create the Effects child
+        //        GameObject fxChild = new GameObject("Effects");
+        //        fxChild.transform.parent = mySkill.transform;
+
+        //        // AffectStat basic init
+        //        AffectStat affectStat = fxChild.AddComponent(new AffectStat()
+        //        {
+        //            AffectedStat = new TagSourceSelector(TagSourceManager.Instance.GetTag("96")), // trial and error to find these
+        //            Value = 50,
+        //            Duration = -1,
+        //            Tags = new TagSourceSelector[0],
+        //            RequireRegistration = false,
+        //        });
+
+        //        // set EffectFamily Type. This is important. See "EffectType.Families" static dictionary
+        //        At.SetValue(new EffectTypeSelector() { SelectedEffectTypeName = "None" }, typeof(Effect), affectStat, "m_effectType");
+
+        //        // create the list of Effect comps to link up to the actual PassiveSkill. Each "Effect" class component goes on this list.
+        //        List<Effect> effects = new List<Effect>() { affectStat };
+
+        //        // set the list of Effects to the skill so they are actually registered
+        //        At.SetValue(effects, typeof(PassiveSkill), skillComponent, "m_passiveEffects");
+
+        //        return mySkill;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        SideLoader.Log(string.Format("Error with SetupSkill! Error: {0}, Stack trace: {1}", e.Message, e.StackTrace), 1);
+
+        //        return null;
+        //    }
+        //}
+
         public IEnumerator LoadItems()
         {
             SideLoader.Log("Loading custom items...");
