@@ -5,32 +5,25 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.IO;
+using SinAPI;
 
 namespace SideLoader
 {
     public class TexReplacer : MonoBehaviour
     {
-        public SideLoader script; 
+        public SideLoader script;
 
         public IEnumerator ReplaceActiveAssets()
         {
             SideLoader.Log("Replacing Materials..");
             float start = Time.time;
 
+            Texture a = new Texture();
+
             // ============ materials ============
             var list = Resources.FindObjectsOfTypeAll<Material>()
                         .Where(x => x.mainTexture != null && script.TextureData.ContainsKey(x.mainTexture.name))
                         .ToList();
-
-            if (ResourcesPrefabManager.Instance.GetItemPrefab(1231231) is Armor ArmorTest
-                && ArmorTest.SpecialVisualPrefabDefault.GetComponent<SkinnedMeshRenderer>() is SkinnedMeshRenderer mesh)
-            {
-                SideLoader.Log(mesh.materials[0].mainTexture.name);
-            }
-            else
-            {
-                SideLoader.Log("couldn't find ArmorTest armor mesh...");
-            }
 
             SideLoader.Log(string.Format("Found {0} materials to replace.", list.Count));
 
@@ -59,6 +52,25 @@ namespace SideLoader
                 yield return null;
             }
 
+            // ========= sprites =========
+
+            SideLoader.Log("Replacing item icons...");
+            if (At.GetValue(typeof(ResourcesPrefabManager), null, "ITEM_PREFABS") is Dictionary<string, Item> dict)
+            {
+                foreach (Item item in dict.Values
+                    .Where(x => 
+                    x.ItemID > 2000000 
+                    && x.ItemIcon != null 
+                    && x.ItemIcon.texture != null 
+                    && script.TextureData.ContainsKey(x.ItemIcon.texture.name)))
+                {
+                    string name = item.ItemIcon.texture.name;
+                    SideLoader.Log(string.Format(" - Replacing item icon: {0}", name));
+
+                    Sprite newSprite = Sprite.Create(script.TextureData[name], new Rect(0, 0, script.TextureData[name].width, script.TextureData[name].height), Vector2.zero);
+                    At.SetValue(newSprite, typeof(Item), item, "m_itemIcon");
+                }
+            }
 
             // ==============================================
 
@@ -110,5 +122,36 @@ namespace SideLoader
             }
             return tex;
         }
-    }    
+
+        public Texture2D CopyTexture2D(Texture2D newTexture)
+        {
+            Texture2D texture = new Texture2D(newTexture.width, newTexture.height)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp
+            };
+
+            int y = 0;
+            while (y < texture.height)
+            {
+                int x = 0;
+                while (x < texture.width)
+                {
+                    if (newTexture.GetPixel(x, y) == new Color(0, 255, 0))
+                    {
+                        texture.SetPixel(x, y, Color.red);
+                    }
+                    else
+                    {
+                        texture.SetPixel(x, y, newTexture.GetPixel(x, y));
+                    }
+                    ++x;
+                }
+                ++y;
+            }
+            texture.Apply();
+
+            return texture;
+        }
+    }
 }

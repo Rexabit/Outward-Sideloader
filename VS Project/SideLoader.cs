@@ -19,7 +19,7 @@ namespace SideLoader
 
         public GameObject obj;
         public string ID = "OTW_SideLoader";
-        public double version = 1.31;
+        public double version = 1.41;
 
         public SL()
         {
@@ -119,6 +119,9 @@ namespace SideLoader
 
             // read folders, store all file paths in FilePaths dictionary
             CheckFolders();
+
+            // wait for RPM to finish loading
+            while (!ResourcesPrefabManager.Instance.Loaded) { yield return null; }
 
             // load texture changes
             Loading = true;
