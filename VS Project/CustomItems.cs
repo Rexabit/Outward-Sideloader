@@ -156,7 +156,7 @@ namespace SideLoader
                 }
 
                 // if we should overwrite normal visual prefab, do that now
-                if (noVisualsFlag)
+                if (noVisualsFlag && item.VisualPrefab != null)
                 {
                     Transform newVisuals = Instantiate(item.VisualPrefab);
                     item.VisualPrefab = newVisuals;
@@ -174,7 +174,7 @@ namespace SideLoader
                 }
 
                 // if we should overwrite armor visuals, do that now
-                if (noArmorVisualsFlag)
+                if (noArmorVisualsFlag && item.SpecialVisualPrefab != null)
                 {
                     Transform newArmorVisuals = Instantiate(item.SpecialVisualPrefabDefault);
                     item.SpecialVisualPrefabDefault = newArmorVisuals;
@@ -346,7 +346,7 @@ namespace SideLoader
                     Texture newTex = Instantiate(tex);
                     DontDestroyOnLoad(newTex);
 
-                    material.SetTexture(entry.Key, newTex);
+                    material.SetTexture(entry.Value, newTex);
 
                     newTex.name = newName + entry.Key;
                 }
