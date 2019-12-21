@@ -82,10 +82,10 @@ namespace SideLoader
         {
             { "_n", "_NormTex" },
             { "_g", "_GenTex" },
-            { "_m", "_GenTex" },
+            //{ "_m", "_GenTex" },
             { "_sc", "_SpecColorTex" },
             { "_e", "_EmissionTex" },
-            { "_i", "_EmissionTex" },
+            //{ "_i", "_EmissionTex" },
         };
 
         public IEnumerator LoadTextures()
@@ -121,37 +121,6 @@ namespace SideLoader
                 tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
             }
             return tex;
-        }
-
-        public Texture2D CopyTexture2D(Texture2D newTexture)
-        {
-            Texture2D texture = new Texture2D(newTexture.width, newTexture.height)
-            {
-                filterMode = FilterMode.Point,
-                wrapMode = TextureWrapMode.Clamp
-            };
-
-            int y = 0;
-            while (y < texture.height)
-            {
-                int x = 0;
-                while (x < texture.width)
-                {
-                    if (newTexture.GetPixel(x, y) == new Color(0, 255, 0))
-                    {
-                        texture.SetPixel(x, y, Color.red);
-                    }
-                    else
-                    {
-                        texture.SetPixel(x, y, newTexture.GetPixel(x, y));
-                    }
-                    ++x;
-                }
-                ++y;
-            }
-            texture.Apply();
-
-            return texture;
         }
     }
 }

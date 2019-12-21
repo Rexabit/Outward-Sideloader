@@ -157,7 +157,7 @@ namespace SideLoader
                 }
 
                 // if we should overwrite normal visual prefab, do that now
-                if (noVisualsFlag && item.VisualPrefab != null)
+                if (noVisualsFlag && item.VisualPrefab != null && item is Equipment)
                 {
                     Transform newVisuals = Instantiate(item.VisualPrefab);
                     item.VisualPrefab = newVisuals;
@@ -167,11 +167,6 @@ namespace SideLoader
                     {
                         if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
                         {
-                            if (child.GetComponent<MeshFilter>())
-                            {
-                                SideLoader.Log("Skipping OverwriteMaterials for " + item.Name + " because it is a MeshFilter renderer, not currently supported!");
-                                continue; // dont want to touch these items for now
-                            }
 
                             string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
 
@@ -185,7 +180,7 @@ namespace SideLoader
                 }
 
                 // if we should overwrite armor visuals, do that now
-                if (noArmorVisualsFlag && item.SpecialVisualPrefab != null)
+                if (noArmorVisualsFlag && item.SpecialVisualPrefab != null && item is Equipment)
                 {
                     Transform newArmorVisuals = Instantiate(item.SpecialVisualPrefabDefault);
                     item.SpecialVisualPrefabDefault = newArmorVisuals;
@@ -340,23 +335,16 @@ namespace SideLoader
 
         private void OverwriteMaterials(Material material, string newName)
         {
-            //if (material.mainTexture == null && material.mainTexture.width > 0)
-            //{
-            //    return;
-            //}
+            Texture newMainTex = Instantiate(material.mainTexture);
+            material.mainTexture = newMainTex;
+            DontDestroyOnLoad(newMainTex);
 
-            //Texture newMainTex = Instantiate(material.mainTexture);
-            //material.mainTexture = newMainTex;
-            //DontDestroyOnLoad(newMainTex);
-
-            //// set mainTexture name (_d)
-            //newMainTex.name = newName + "_d";
+            // set mainTexture name (_d)
+            newMainTex.name = newName + "_d";
 
             // check each shader material suffix name
             foreach (KeyValuePair<string, string> entry in TexReplacer.TextureSuffixes)
             {
-                if (entry.Key == "_m" || entry.Key == "_i") { continue; }
-
                 if (material.GetTexture(entry.Value) is Texture tex)
                 {
                     Texture newTex = Instantiate(tex);
