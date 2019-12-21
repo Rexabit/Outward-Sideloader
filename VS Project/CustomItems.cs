@@ -169,7 +169,7 @@ namespace SideLoader
                         {
                             string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
 
-                            //OverwriteMaterials(mesh.material, newMatName);
+                            OverwriteMaterials(mesh.material, newMatName);
                         }
                     }
                 }
@@ -335,7 +335,7 @@ namespace SideLoader
                 return;
             }
 
-            Texture newMainTex = Instantiate(material.mainTexture) ?? Instantiate(material.GetTexture(TexReplacer.TextureSuffixes["_d"]));
+            Texture newMainTex = Instantiate(material.mainTexture);
             material.mainTexture = newMainTex;
             DontDestroyOnLoad(newMainTex);
 
