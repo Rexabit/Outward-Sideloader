@@ -56,7 +56,7 @@ Nine Dots use a custom shader, and the material names are set like so:
 * "\_NormTex" ("name_n.png"): Normal map (bump map)
 * "\_GenTex" ("name_g.png"): Specular (R), Gloss (G), Occlusion (B).
 * "\_SpecColorTex" ("name_sc.png") : used to add color to the specular map in some cases (RGB)
-* "\_EmissionTex" ("name_i.png" or "name_e.png") : Emissive map (glow map)
+* "\_EmissionTex" ("name_i.png") : Emissive map (glow map)
 
 When replacing anything other than the Main Texture, you must ALSO include the main texture otherwise no changes will be made. You do not need to make any changes to the main texture.
 
