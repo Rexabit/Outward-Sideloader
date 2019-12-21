@@ -167,9 +167,19 @@ namespace SideLoader
                     {
                         if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
                         {
+                            if (child.GetComponent<MeshFilter>())
+                            {
+                                SideLoader.Log("Skipping OverwriteMaterials for " + item.Name + " because it is a MeshFilter renderer, not currently supported!");
+                                continue; // dont want to touch these items for now
+                            }
+
                             string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
 
-                            OverwriteMaterials(mesh.material, newMatName);
+                            Material m = Instantiate(mesh.material);
+                            DontDestroyOnLoad(m);
+
+                            mesh.material = m;
+                            OverwriteMaterials(m, newMatName);
                         }
                     }
                 }
@@ -330,17 +340,17 @@ namespace SideLoader
 
         private void OverwriteMaterials(Material material, string newName)
         {
-            if (material.mainTexture == null)
-            {
-                return;
-            }
+            //if (material.mainTexture == null && material.mainTexture.width > 0)
+            //{
+            //    return;
+            //}
 
-            Texture newMainTex = Instantiate(material.mainTexture);
-            material.mainTexture = newMainTex;
-            DontDestroyOnLoad(newMainTex);
+            //Texture newMainTex = Instantiate(material.mainTexture);
+            //material.mainTexture = newMainTex;
+            //DontDestroyOnLoad(newMainTex);
 
-            // set mainTexture name (_d)
-            newMainTex.name = newName + "_d";
+            //// set mainTexture name (_d)
+            //newMainTex.name = newName + "_d";
 
             // check each shader material suffix name
             foreach (KeyValuePair<string, string> entry in TexReplacer.TextureSuffixes)
