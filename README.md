@@ -56,7 +56,7 @@ Nine Dots use a custom shader, and the material names are set like so:
 * "\_NormTex" ("name_n.png"): Normal map (bump map)
 * "\_GenTex" ("name_g.png"): Specular (R), Gloss (G), Occlusion (B).
 * "\_SpecColorTex" ("name_sc.png") : used to add color to the specular map in some cases (RGB)
-* "\_EmissionTex" ("name_i.png" or "name_e.png") : Emissive map (glow map)
+* "\_EmissionTex" ("name_i.png") : Emissive map (glow map)
 
 When replacing anything other than the Main Texture, you must ALSO include the main texture otherwise no changes will be made. You do not need to make any changes to the main texture.
 
@@ -81,8 +81,6 @@ To use the loaded Asset Bundles in your own C# mods:
 You can define custom items by creating a simple .JSON file in the CustomItems folder, following one of the following templates. All items defined in this folder will be loaded and added to the game's systems automatically.
 
 You can also define items through C# if you wish, using the SL.Instance.CustomItems class.
-
-Note: I have included an example SL Pack folder for custom items, which shows how to set up a weapon. You can place this SL Pack folder in the Mods\SideLoader folder, and have a look how things are set up.
 
 #### Notes about Custom Visual Prefabs ####
 
