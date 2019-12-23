@@ -82,8 +82,6 @@ You can define custom items by creating a simple .JSON file in the CustomItems f
 
 You can also define items through C# if you wish, using the SL.Instance.CustomItems class.
 
-Note: I have included an example SL Pack folder for custom items, which shows how to set up a weapon. You can place this SL Pack folder in the Mods\SideLoader folder, and have a look how things are set up.
-
 #### Notes about Custom Visual Prefabs ####
 
 The Custom Visual Prefabs are entirely optional. If you do not wish to set one for your custom item, simply set all the relevant fields to blank ("").
