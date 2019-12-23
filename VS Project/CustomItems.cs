@@ -91,7 +91,7 @@ namespace SideLoader
                 SetNameAndDesc(item, name, desc);
 
                 // set item icon
-                if (!string.IsNullOrEmpty(template.ItemIconName))
+                if (!string.IsNullOrEmpty(template.ItemIconName) && script.TextureData.ContainsKey(template.ItemIconName))
                 {
                     Texture2D icon = script.TextureData[template.ItemIconName];
                     if (icon)
