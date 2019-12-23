@@ -157,40 +157,82 @@ namespace SideLoader
                 }
 
                 // if we should overwrite normal visual prefab, do that now
-                if (noVisualsFlag && item.VisualPrefab != null && item is Equipment)
+                if (noVisualsFlag && item.VisualPrefab != null)
                 {
-                    Transform newVisuals = Instantiate(item.VisualPrefab);
-                    item.VisualPrefab = newVisuals;
-                    DontDestroyOnLoad(newVisuals);
+                    bool customDefined = false;
 
-                    foreach (Transform child in newVisuals)
+                    foreach (string suffix in TexReplacer.TextureSuffixes.Keys)
                     {
-                        if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
+                        string search = "tex_itm_" + template.New_ItemID + "_" + template.Name + suffix;
+                        if (script.TextureData.ContainsKey(search))
                         {
-
-                            string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
-
-                            Material m = Instantiate(mesh.material);
-                            DontDestroyOnLoad(m);
-
-                            mesh.material = m;
-                            OverwriteMaterials(m, newMatName);
+                            customDefined = true;
+                            break;
                         }
+                    }
+
+                    if (customDefined)
+                    {
+                        Transform newVisuals = Instantiate(item.VisualPrefab);
+                        item.VisualPrefab = newVisuals;
+                        DontDestroyOnLoad(newVisuals);
+
+                        foreach (Transform child in newVisuals)
+                        {
+                            if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
+                            {
+                                SideLoader.Log("Overwriting ItemVisuals for " + item.Name);
+
+                                string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
+
+                                Material m = Instantiate(mesh.material);
+                                DontDestroyOnLoad(m);
+
+                                mesh.material = m;
+                                OverwriteMaterials(m, newMatName);
+                            }
+                            else { continue; }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        SideLoader.Log("No custom ItemVisuals defined for " + item.Name);
                     }
                 }
 
                 // if we should overwrite armor visuals, do that now
-                if (noArmorVisualsFlag && item.SpecialVisualPrefab != null && item is Equipment)
+                if (noArmorVisualsFlag && item.SpecialVisualPrefab != null)
                 {
-                    Transform newArmorVisuals = Instantiate(item.SpecialVisualPrefabDefault);
-                    item.SpecialVisualPrefabDefault = newArmorVisuals;
-                    DontDestroyOnLoad(newArmorVisuals);
+                    bool customDefined = false;
 
-                    if (newArmorVisuals.GetComponent<SkinnedMeshRenderer>() is SkinnedMeshRenderer mesh)
+                    foreach (string suffix in TexReplacer.TextureSuffixes.Keys)
                     {
-                        string newMatName = "tex_cha_" + template.New_ItemID + "_" + template.Name;
+                        if (script.TextureData.ContainsKey("tex_cha_" + template.New_ItemID + "_" + template.Name + suffix))
+                        {
+                            customDefined = true;
+                            break;
+                        }
+                    }
 
-                        OverwriteMaterials(mesh.material, newMatName);
+                    if (customDefined)
+                    {
+                        Transform newArmorVisuals = Instantiate(item.SpecialVisualPrefabDefault);
+                        item.SpecialVisualPrefabDefault = newArmorVisuals;
+                        DontDestroyOnLoad(newArmorVisuals);
+
+                        if (newArmorVisuals.GetComponent<SkinnedMeshRenderer>() is SkinnedMeshRenderer mesh)
+                        {
+                            SideLoader.Log("Overwriting SpecialVisualPrefab visuals for " + item.Name);
+
+                            string newMatName = "tex_cha_" + template.New_ItemID + "_" + template.Name;
+
+                            OverwriteMaterials(mesh.material, newMatName);
+                        }
+                    }
+                    else
+                    {
+                        SideLoader.Log("No custom ArmorVisuals defined for " + item.Name);
                     }
                 }
 
@@ -338,13 +380,13 @@ namespace SideLoader
             Texture newMainTex = Instantiate(material.mainTexture);
             material.mainTexture = newMainTex;
             DontDestroyOnLoad(newMainTex);
-
-            // set mainTexture name (_d)
             newMainTex.name = newName + "_d";
 
             // check each shader material suffix name
             foreach (KeyValuePair<string, string> entry in TexReplacer.TextureSuffixes)
             {
+                if (entry.Key == "_d") { continue; } // already set MainTexture
+
                 if (material.GetTexture(entry.Value) is Texture tex)
                 {
                     Texture newTex = Instantiate(tex);

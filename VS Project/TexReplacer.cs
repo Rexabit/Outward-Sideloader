@@ -42,6 +42,8 @@ namespace SideLoader
                 // check each shader material suffix name
                 foreach (KeyValuePair<string, string> entry in TextureSuffixes)
                 {
+                    if (entry.Key == "_d") { continue; } // already set MainTex
+
                     if (script.TextureData.ContainsKey(name + entry.Key))
                     {
                         SideLoader.Log(" - Setting " + entry.Value + " for " + m.name);
@@ -80,12 +82,13 @@ namespace SideLoader
 
         public static readonly Dictionary<string, string> TextureSuffixes = new Dictionary<string, string>()
         {
+            { "_d", "_MainTex" },
             { "_n", "_NormTex" },
             { "_g", "_GenTex" },
             //{ "_m", "_GenTex" },
             { "_sc", "_SpecColorTex" },
-            { "_e", "_EmissionTex" },
-            //{ "_i", "_EmissionTex" },
+            //{ "_e", "_EmissionTex" },
+            { "_i", "_EmissionTex" },
         };
 
         public IEnumerator LoadTextures()
