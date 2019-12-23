@@ -199,17 +199,17 @@ namespace SideLoader
             log = "[SideLoader] " + log;
             if (errorLevel == 1)
             {
-                OLogger.Error(log);
+                //OLogger.Error(log);
                 Debug.LogError(log);
             }
             else if (errorLevel == 0)
             {
-                OLogger.Warning(log);
+                // OLogger.Warning(log);
                 Debug.Log(log);
             }
             else if (errorLevel == -1)
             {
-                OLogger.Log(log);
+                // OLogger.Log(log);
                 Debug.Log(log);
             }
         }
