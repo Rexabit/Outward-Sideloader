@@ -13,6 +13,13 @@ How to use:
 * For BepInEx, move "Outward\Mods\SideLoader.dll" to "Outward\BepInEx\plugins\\", and install the BepInEx Partiality wrapper.
 * That's it! Follow specific instructions below for more info.
 
+## Examples and Resources ##
+
+* First, download this repository (download to zip, or clone)
+* Follow the instructions above to install the SideLoader correctly
+* Look in the Outward\Mods\SideLoader folder, there should be an "ExampleFolder" which shows the structure of a SideLoader pack.
+* Back in the main repository, the "Resources" folder has some useful files such as a Custom Weapon example, some blank icon templates, the human model rig for Outward, and probably more stuff in the future. 
+
 ## Creating SideLoader Packs ##
 
 For all uses of the SideLoader (replacing textures, custom items, custom asset bundles, etc) you will need to make a SideLoader pack.
