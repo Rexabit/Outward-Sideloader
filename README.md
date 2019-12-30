@@ -22,7 +22,7 @@ How to use:
 
 ## Wiki ##
 
-View the Wiki [https://github.com/sinaioutlander/Outward-Sideloader/wiki](Here) for this repository for more in-depth guides.
+View the Wiki [here](https://github.com/sinaioutlander/Outward-Sideloader/wiki) for this repository for more in-depth guides.
 
 ## Conclusion ##
 
