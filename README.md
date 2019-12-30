@@ -13,6 +13,13 @@ How to use:
 * For BepInEx, move "Outward\Mods\SideLoader.dll" to "Outward\BepInEx\plugins\\", and install the BepInEx Partiality wrapper.
 * That's it! Follow specific instructions below for more info.
 
+## Examples and Resources ##
+
+* First, download this repository (download to zip, or clone)
+* Follow the instructions above to install the SideLoader correctly
+* Look in the Outward\Mods\SideLoader folder, there should be an "ExampleFolder" which shows the structure of a SideLoader pack.
+* Back in the main repository, the "Resources" folder has some useful files such as a Custom Weapon example, some blank icon templates, the human model rig for Outward, and probably more stuff in the future. 
+
 ## Creating SideLoader Packs ##
 
 For all uses of the SideLoader (replacing textures, custom items, custom asset bundles, etc) you will need to make a SideLoader pack.
@@ -60,7 +67,7 @@ Nine Dots use a custom shader, and the material names are set like so:
 
 When replacing anything other than the Main Texture, you must ALSO include the main texture otherwise no changes will be made. You do not need to make any changes to the main texture.
 
-Note that sometimes the game uses inconsistent names for the different material layers. In this case, all layers should be renamed after the main texture (the one named "\_d.png" or with no suffix). For example, for Plate Armor, the main texture is "tex_cha_PlateArmorPlain.png", but some of the layers are just "tex_cha_PlateArmor_[suffix].png". The secondary layers in this case would all be renamed to "tex_cha_PlateArmorPlain_[suffix].png" in order for the sideloader to correctly identify them.
+Note that sometimes the game uses inconsistent names for the different material layers. In this case, all layers should be renamed after the main texture (the one named "\_d.png" or with no suffix). For example, for Plate Armor, the main texture is "tex_cha_PlateArmorPlain.png", but some of the layers are just "tex_cha_PlateArmor_[suffix].png". The secondary layers in this case should all be renamed to "tex_cha_PlateArmorPlain_[suffix].png" in order for the sideloader to correctly identify them.
 
 ### Custom Asset Bundles ###
 Modders can use this tool to conveniently load and manage asset bundles, for use in their own C# mods.
@@ -101,13 +108,13 @@ If you don't set your own Visual Prefab, the SideLoader will rename the material
 For most items, weapons, and "ground items" (when you drop an item), the format is like so:
 
 * ``tex_itm_[ItemID]_[ItemName]_[suffix].png``
-* ``_d`` is the suffix for main texture. See above for the suffixes used for other textures (\_e, \_g, \_sc etc).
+* See above for the suffixes used for different textures (\_d, \_n, \_g, \_sc and \_i).
 
 For Armor Visuals, the format is:
 
 * ``tex_cha_[ItemID]_[ItemName]_[suffix].png`` 
 
-[ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name.
+[ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name. Note that the [ItemName] MUST be the EXACT same as the "Name" field in your JSON. If your name is "Cool Gun", the format will be ``tex_itm\_[ID]\_Cool Gun_[suffix].png``
 
 As an example, "tex_itm_1234567_myItemName_d.png" for a normal item, main texture. For armor, "tex_cha_1234567_myItemName_d.png" would be applied to the main texture when it is equipped.
 
