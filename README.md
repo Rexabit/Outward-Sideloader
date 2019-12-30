@@ -6,7 +6,11 @@ Uses Partiality - https://github.com/PartialityModding/PartialityLauncher/releas
 
 * Credits to Elec0 (https://github.com/Elec0) for the base mod
 
-How to use:
+## [Wiki](https://github.com/sinaioutlander/Outward-Sideloader/wiki) ##
+
+View the [Wiki](https://github.com/sinaioutlander/Outward-Sideloader/wiki) for in-depth guides.
+
+## How To Install ##
 
 * Unzip the "SideLoader.zip" file directly to your Outward installation directory.
 * For Partiality users, enable the mod in Partiality, hit "Apply Mods" and "Yes"
@@ -19,10 +23,6 @@ How to use:
 * Follow the instructions above to install the SideLoader correctly
 * Look in the Outward\Mods\SideLoader folder, there should be an "ExampleFolder" which shows the structure of a SideLoader pack.
 * Back in the main repository, the "Resources" folder has some useful files such as a Custom Weapon example, some blank icon templates, the human model rig for Outward, and probably more stuff in the future. 
-
-## Wiki ##
-
-View the Wiki [here](https://github.com/sinaioutlander/Outward-Sideloader/wiki) for this repository for more in-depth guides.
 
 ## Conclusion ##
 
