@@ -10,7 +10,7 @@ namespace SideLoader
 {
     public class AssetBundleLoader : MonoBehaviour
     {
-        public SideLoader script;
+        public SideLoader _base;
 
         public IEnumerator LoadAssetBundles()
         {
@@ -18,7 +18,7 @@ namespace SideLoader
             SideLoader.Log("Loading Asset Bundles...");
 
             // get all bundle folders
-            foreach (string filepath in script.FilePaths[ResourceTypes.AssetBundle])
+            foreach (string filepath in _base.FilePaths[ResourceTypes.AssetBundle])
             {
                 try
                 {
@@ -27,7 +27,7 @@ namespace SideLoader
                     if (bundle // not sure if necessary, just to be safe
                         && bundle is AssetBundle)
                     {
-                        script.LoadedBundles.Add(Path.GetFileNameWithoutExtension(filepath), bundle);
+                        _base.LoadedBundles.Add(Path.GetFileNameWithoutExtension(filepath), bundle);
 
                         SideLoader.Log(" - Loaded bundle: " + filepath);
                     }
@@ -40,7 +40,7 @@ namespace SideLoader
                 yield return null;
             }
 
-            script.Loading = false;
+            _base.Loading = false;
             SideLoader.Log("Asset Bundles loaded. Time: " + (Time.time - start));
         }
     }

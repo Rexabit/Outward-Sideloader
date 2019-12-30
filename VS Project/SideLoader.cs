@@ -53,9 +53,10 @@ namespace SideLoader
         public bool Loading = false; // for coroutines
 
         // components
-        public AssetBundleLoader BundleLoader;
+        public AssetBundleLoader bundleLoader;
         public TexReplacer TexReplacer;
         public CustomItems CustomItems;
+        public SceneLoader SceneLoader;
 
         // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
@@ -64,12 +65,16 @@ namespace SideLoader
         // main directory stuff
         public string loadDir = @"Mods\SideLoader";
         public string[] directories;
+
         public string[] SupportedResources =  // List of supported stuff we can sideload. Also the name used for subfolders in SideLoader mod packs. 
         {
             ResourceTypes.Texture,
             ResourceTypes.AssetBundle,
-            ResourceTypes.CustomItems
+            ResourceTypes.CustomItems,
+            ResourceTypes.Scene,
         };       
+
+        // list of all ResourceTypes, and FilePaths for that ResourceType
         public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Key: Category, Value: list of files in category
         
         // textures
@@ -112,10 +117,10 @@ namespace SideLoader
             Log("Version " + _base.Version + " starting...", 0);
 
             // Add Components
-            BundleLoader = _base.obj.AddComponent(new AssetBundleLoader { script = this });
-            TexReplacer = _base.obj.AddComponent(new TexReplacer { script = this });
-            CustomItems = _base.obj.AddComponent(new CustomItems { script = this });
-            //gui = _base.obj.AddComponent(new SLGUI { script = this });
+            bundleLoader = _base.obj.AddComponent(new AssetBundleLoader { _base = this });
+            TexReplacer = _base.obj.AddComponent(new TexReplacer { _base = this });
+            CustomItems = _base.obj.AddComponent(new CustomItems { _base = this });
+            //SceneLoader = _base.obj.AddComponent(new SceneLoader { _base = this });
 
             // read folders, store all file paths in FilePaths dictionary
             CheckFolders();
@@ -130,7 +135,7 @@ namespace SideLoader
 
             // load asset bundles
             Loading = true;
-            StartCoroutine(BundleLoader.LoadAssetBundles());
+            StartCoroutine(bundleLoader.LoadAssetBundles());
             while (Loading) { yield return null; }
 
             // load custom items
@@ -199,7 +204,7 @@ namespace SideLoader
             log = "[SideLoader] " + log;
             if (errorLevel == 1)
             {
-                //OLogger.Error(log);
+                // OLogger.Error(log);
                 Debug.LogError(log);
             }
             else if (errorLevel == 0)
@@ -220,5 +225,6 @@ namespace SideLoader
         public static string Texture = "Texture2D";
         public static string AssetBundle = "AssetBundles";
         public static string CustomItems = "CustomItems";
+        public static string Scene = "Scenes";
     }
 }

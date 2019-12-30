@@ -13,13 +13,13 @@ namespace SideLoader
 {
     public class CustomItems : MonoBehaviour
     {
-        public SideLoader script;
+        public SideLoader _base;
 
         public IEnumerator LoadItems()
         {
             SideLoader.Log("Loading custom items...");
 
-            foreach (string path in script.FilePaths[ResourceTypes.CustomItems])
+            foreach (string path in _base.FilePaths[ResourceTypes.CustomItems])
             {
                 string json = File.ReadAllText(path);
 
@@ -31,7 +31,7 @@ namespace SideLoader
                     Item target = ResourcesPrefabManager.Instance.GetItemPrefab(template.CloneTarget_ItemID);
 
                     ApplyCustomItem(template);
-                    script.LoadedCustomItems.Add(template.New_ItemID, ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID));
+                    _base.LoadedCustomItems.Add(template.New_ItemID, ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID));
 
                     if (target is Weapon)
                     {
@@ -53,7 +53,7 @@ namespace SideLoader
             SideLoader.Log("Loaded custom items", 0);
 
             // custom recipes
-            foreach (string path in Directory.GetDirectories(script.loadDir))
+            foreach (string path in Directory.GetDirectories(_base.loadDir))
             {
                 if (!Directory.Exists(path + @"\CustomItems\Recipes"))
                 {
@@ -72,7 +72,7 @@ namespace SideLoader
                 }
             }
 
-            script.Loading = false;
+            _base.Loading = false;
             SideLoader.Log("Loaded custom recipes", 0);
         }
 
@@ -91,9 +91,9 @@ namespace SideLoader
                 SetNameAndDesc(item, name, desc);
 
                 // set item icon
-                if (!string.IsNullOrEmpty(template.ItemIconName) && script.TextureData.ContainsKey(template.ItemIconName))
+                if (!string.IsNullOrEmpty(template.ItemIconName) && _base.TextureData.ContainsKey(template.ItemIconName))
                 {
-                    Texture2D icon = script.TextureData[template.ItemIconName];
+                    Texture2D icon = _base.TextureData[template.ItemIconName];
                     if (icon)
                     {
                         SetItemIcon(item, icon);
@@ -105,8 +105,8 @@ namespace SideLoader
 
                 // check if AssetBundle name is defined
                 if (!string.IsNullOrEmpty(template.AssetBundle_Name) 
-                    && script.LoadedBundles.ContainsKey(template.AssetBundle_Name)
-                    && script.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
+                    && _base.LoadedBundles.ContainsKey(template.AssetBundle_Name)
+                    && _base.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
                 {
                     // set normal visual prefab
                     if (!string.IsNullOrEmpty(template.VisualPrefabName) 
@@ -164,7 +164,7 @@ namespace SideLoader
                     foreach (string suffix in TexReplacer.TextureSuffixes.Keys)
                     {
                         string search = "tex_itm_" + template.New_ItemID + "_" + template.Name + suffix;
-                        if (script.TextureData.ContainsKey(search))
+                        if (_base.TextureData.ContainsKey(search))
                         {
                             customDefined = true;
                             break;
@@ -208,7 +208,7 @@ namespace SideLoader
 
                     foreach (string suffix in TexReplacer.TextureSuffixes.Keys)
                     {
-                        if (script.TextureData.ContainsKey("tex_cha_" + template.New_ItemID + "_" + template.Name + suffix))
+                        if (_base.TextureData.ContainsKey("tex_cha_" + template.New_ItemID + "_" + template.Name + suffix))
                         {
                             customDefined = true;
                             break;

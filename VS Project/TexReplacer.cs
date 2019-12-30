@@ -11,7 +11,7 @@ namespace SideLoader
 {
     public class TexReplacer : MonoBehaviour
     {
-        public SideLoader script;
+        public SideLoader _base;
 
         public IEnumerator ReplaceActiveAssets()
         {
@@ -22,7 +22,7 @@ namespace SideLoader
 
             // ============ materials ============
             var list = Resources.FindObjectsOfTypeAll<Material>()
-                        .Where(x => x.mainTexture != null && script.TextureData.ContainsKey(x.mainTexture.name))
+                        .Where(x => x.mainTexture != null && _base.TextureData.ContainsKey(x.mainTexture.name))
                         .ToList();
 
             SideLoader.Log(string.Format("Found {0} materials to replace.", list.Count));
@@ -34,7 +34,7 @@ namespace SideLoader
                 i++; SideLoader.Log(string.Format(" - Replacing material {0} of {1}: {2}", i, list.Count, name));
 
                 // set maintexture (diffuse map)
-                m.mainTexture = script.TextureData[name];
+                m.mainTexture = _base.TextureData[name];
 
                 // ======= set other shader material layers =======     
                 if (name.EndsWith("_d")) { name = name.Substring(0, name.Length - 2); } // try remove the _d suffix, if its there
@@ -44,10 +44,10 @@ namespace SideLoader
                 {
                     if (entry.Key == "_d") { continue; } // already set MainTex
 
-                    if (script.TextureData.ContainsKey(name + entry.Key))
+                    if (_base.TextureData.ContainsKey(name + entry.Key))
                     {
                         SideLoader.Log(" - Setting " + entry.Value + " for " + m.name);
-                        m.SetTexture(entry.Value, script.TextureData[name + entry.Key]);
+                        m.SetTexture(entry.Value, _base.TextureData[name + entry.Key]);
                     }
                 }
 
@@ -64,12 +64,12 @@ namespace SideLoader
                     x.ItemID > 2000000 
                     && x.ItemIcon != null 
                     && x.ItemIcon.texture != null 
-                    && script.TextureData.ContainsKey(x.ItemIcon.texture.name)))
+                    && _base.TextureData.ContainsKey(x.ItemIcon.texture.name)))
                 {
                     string name = item.ItemIcon.texture.name;
                     SideLoader.Log(string.Format(" - Replacing item icon: {0}", name));
 
-                    Sprite newSprite = Sprite.Create(script.TextureData[name], new Rect(0, 0, script.TextureData[name].width, script.TextureData[name].height), Vector2.zero);
+                    Sprite newSprite = Sprite.Create(_base.TextureData[name], new Rect(0, 0, _base.TextureData[name].width, _base.TextureData[name].height), Vector2.zero);
                     At.SetValue(newSprite, typeof(Item), item, "m_itemIcon");
                 }
             }
@@ -77,7 +77,7 @@ namespace SideLoader
             // ==============================================
 
             SideLoader.Log("Active assets replaced. Time: " + (Time.time - start), 0);
-            script.Loading = false;
+            _base.Loading = false;
         }
 
         public static readonly Dictionary<string, string> TextureSuffixes = new Dictionary<string, string>()
@@ -96,19 +96,19 @@ namespace SideLoader
             SideLoader.Log("Reading Texture2D data...");
             float start = Time.time;
 
-            foreach (string filepath in script.FilePaths[ResourceTypes.Texture])
+            foreach (string filepath in _base.FilePaths[ResourceTypes.Texture])
             {
                 Texture2D texture2D = LoadPNG(filepath);
 
                 string texname = Path.GetFileNameWithoutExtension(filepath);
-                script.TextureData.Add(texname, texture2D);
+                _base.TextureData.Add(texname, texture2D);
 
                 SideLoader.Log(" - Texture loaded: " + texname + ", from " + filepath);
 
                 yield return null;
             }
 
-            script.Loading = false;
+            _base.Loading = false;
             SideLoader.Log("Textures loaded. Time: " + (Time.time - start), 0);
         }
 
