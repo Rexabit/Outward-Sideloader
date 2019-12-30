@@ -114,7 +114,7 @@ For Armor Visuals, the format is:
 
 * ``tex_cha_[ItemID]_[ItemName]_[suffix].png`` 
 
-[ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name. Note that the [ItemName] MUST be the EXACT same as the "Name" field in your JSON. If your name is "Cool Gun", the format will be ``tex_itm\_[ID]\_Cool Gun_[suffix].png``
+[ItemID] is the new, custom ID for your item, and likewise [ItemName] is your new name. Note that the [ItemName] MUST be the EXACT same as the "Name" field in your JSON. If your name is "Cool Gun", the format will be ``tex_itm_[ID]_Cool Gun_[suffix].png``
 
 As an example, "tex_itm_1234567_myItemName_d.png" for a normal item, main texture. For armor, "tex_cha_1234567_myItemName_d.png" would be applied to the main texture when it is equipped.
 
