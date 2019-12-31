@@ -81,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetBundleLoader.cs" />
-    <Compile Include="SceneLoader.cs" />
+    <Compile Include="AudioReplacer.cs" />
     <Compile Include="TexReplacer.cs" />
     <Compile Include="CustomItems.cs" />
     <Compile Include="SideLoader.cs" />

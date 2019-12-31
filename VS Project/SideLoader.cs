@@ -19,7 +19,7 @@ namespace SideLoader
 
         public GameObject obj;
         public string ID = "OTW_SideLoader";
-        public double version = 1.41;
+        public double version = 1.5;
 
         public SL()
         {
@@ -56,7 +56,7 @@ namespace SideLoader
         public AssetBundleLoader bundleLoader;
         public TexReplacer TexReplacer;
         public CustomItems CustomItems;
-        public SceneLoader SceneLoader;
+        public AudioReplacer AudioReplacer;
 
         // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
@@ -71,20 +71,23 @@ namespace SideLoader
             ResourceTypes.Texture,
             ResourceTypes.AssetBundle,
             ResourceTypes.CustomItems,
-            ResourceTypes.Scene,
+            ResourceTypes.Audio,
         };       
 
-        // list of all ResourceTypes, and FilePaths for that ResourceType
-        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Key: Category, Value: list of files in category
-        
+        // ========== THIS DICTIONARY CONTAINS ALL FILEPATHS FOR ALL RESOURCETYPES ==========
+        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Key: ResourceType, Value: list of file paths for that type        
+
+        // ====================== INDIVIDUAL DICTIONARIES FOR ACTUAL RESOURCE ASSETS ===============
         // textures
         public Dictionary<string, Texture2D> TextureData = new Dictionary<string, Texture2D>();  // Key: File Name, Value: data of texture files
-
         // asset bundles
         public Dictionary<string, AssetBundle> LoadedBundles = new Dictionary<string, AssetBundle>(); //  Key: bundle Name, Value: actual AssetBundle
-
         // custom items
-        public Dictionary<int, Item> LoadedCustomItems = new Dictionary<int, Item>();
+        public Dictionary<int, Item> LoadedCustomItems = new Dictionary<int, Item>(); // Key: Item ID, Value: actual Item
+        // audio clips
+        public Dictionary<string, AudioClip> AudioClips = new Dictionary<string, AudioClip>(); // Key: audio file name, Value: audioClip
+
+        // ===============================================================================================
 
         internal void Update()
         {
@@ -107,9 +110,14 @@ namespace SideLoader
                     CurrentScene = SceneManagerHelper.ActiveSceneName;
                     SceneChangeFlag = false;
 
-                    StartCoroutine(TexReplacer.ReplaceActiveAssets());
+                    ReplaceActiveAssets();
                 }
             }
+        }
+
+        public void ReplaceActiveAssets()
+        {
+            StartCoroutine(TexReplacer.ReplaceActiveAssets());
         }
 
         private IEnumerator Init()
@@ -120,6 +128,7 @@ namespace SideLoader
             bundleLoader = _base.obj.AddComponent(new AssetBundleLoader { _base = this });
             TexReplacer = _base.obj.AddComponent(new TexReplacer { _base = this });
             CustomItems = _base.obj.AddComponent(new CustomItems { _base = this });
+            AudioReplacer = _base.obj.AddComponent(new AudioReplacer { _base = this });
             //SceneLoader = _base.obj.AddComponent(new SceneLoader { _base = this });
 
             // read folders, store all file paths in FilePaths dictionary
@@ -141,6 +150,11 @@ namespace SideLoader
             // load custom items
             Loading = true;
             StartCoroutine(CustomItems.LoadItems());
+            while (Loading) { yield return null; }
+
+            // load audio filepaths
+            Loading = true;
+            StartCoroutine(AudioReplacer.LoadAudioClips());
             while (Loading) { yield return null; }
 
             // load something else...
@@ -225,6 +239,6 @@ namespace SideLoader
         public static string Texture = "Texture2D";
         public static string AssetBundle = "AssetBundles";
         public static string CustomItems = "CustomItems";
-        public static string Scene = "Scenes";
+        public static string Audio = "Audio";
     }
 }
