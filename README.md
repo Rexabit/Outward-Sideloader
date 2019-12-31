@@ -2,8 +2,7 @@
 
 ## Asset SideLoader and Replacer for Outward.
 
-Uses Partiality - https://github.com/PartialityModding/PartialityLauncher/releases
-
+* Uses [Partiality](https://github.com/PartialityModding/PartialityLauncher/releases)
 * Credits to [Elec0](https://github.com/Elec0) for the base mod
 
 ## [Wiki](https://github.com/sinaioutlander/Outward-Sideloader/wiki) ##
