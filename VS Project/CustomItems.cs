@@ -7,7 +7,7 @@ using UnityEngine;
 using SinAPI;
 using Localizer;
 using System.IO;
-using OModAPI;
+//using OModAPI;
 
 namespace SideLoader
 {
