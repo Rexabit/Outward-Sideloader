@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using SinAPI;
-using OModAPI;
+//using OModAPI;
 using System.IO;
 
 namespace SideLoader
@@ -36,8 +36,6 @@ namespace SideLoader
 
                 if (clip != null)
                 {
-                    OLogger.Warning("Loading clip: " + fileName + " from " + filePath);
-
                     while (clip.loadState != AudioDataLoadState.Loaded)
                         yield return new WaitForSeconds(0.1f);
 
@@ -49,8 +47,6 @@ namespace SideLoader
                     {
                         _base.AudioClips.Add(fileName, clip);
                     }
-
-                    OLogger.Warning("Loaded audio clip: " + fileName);
                 }
             }
 
