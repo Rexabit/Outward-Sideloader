@@ -1,0 +1,56 @@
+{
+    "New_ItemID": 0000000,
+    "CloneTarget_ItemID": 2000010,
+    "AssetBundle_Name": "",
+    "VisualPrefabName": "",
+    "ArmorVisualPrefabName": "",
+    "HelmetHideFace": false,
+    "HelmetHideHair": false,
+    "ItemIconName": "",
+    "Visual_PosOffset": {
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
+    },
+    "Visual_RotOffset": {
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
+    },
+    "Name": "My Item Name",
+    "Description": "My Description.",
+    "Durability": 1,
+    "BaseValue": 1,
+    "Weight": 1.0,
+    "DamageBonuses": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "DamageResistances": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "PhysProtection": 0.0,
+    "ImpactResistance": 0.0,
+    "ManaUseModifier": 0.0,
+    "StaminaUsePenalty": 0.0,
+    "MovementPenalty": 0.0,
+    "HealthBonus": 0.0,
+    "PouchBonus": 0.0,
+    "ColdProtection": 0.0,
+    "HeatProtection": 0.0
+}
