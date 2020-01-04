@@ -4,6 +4,7 @@
 
 * Uses [Partiality](https://github.com/PartialityModding/PartialityLauncher/releases)
 * Credits to [Elec0](https://github.com/Elec0) for the base mod
+* Credit to ehaugw for the Steel Axe example, and for lots of help with testing
 
 ## [Wiki](https://github.com/sinaioutlander/Outward-Sideloader/wiki) ##
 
