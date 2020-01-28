@@ -20,7 +20,7 @@ namespace SideLoader
 
         public GameObject obj;
         public string ID = "OTW_SideLoader";
-        public double version = 1.5;
+        public double version = 1.6;
 
         public SL()
         {
