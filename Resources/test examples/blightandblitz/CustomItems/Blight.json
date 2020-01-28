@@ -1,0 +1,50 @@
+{
+    "New_ItemID": 6666666,
+    "CloneTarget_ItemID": 5110000,
+    "AssetBundle_Name": "blitz",
+    "VisualPrefabName": "blight_visual",
+    "ArmorVisualPrefabName": "",
+    "Visual_PosOffset": {
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
+    },
+    "Visual_RotOffset": {
+        "x": 0.0,
+        "y": -90.0,
+        "z": 0.0
+    },
+    "HelmetHideFace": false,
+    "HelmetHideHair": false,
+    "ItemIconName": "BlightIcon",
+    "Name": "Blight",
+    "Description": "The Commander said to make this sword fit for the Scourge.\n\nInflicts Curse on enemies.",
+    "Durability": 1000,
+    "BaseValue": 1000,
+    "Weight": 3,
+    "DamageBonuses": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ManaUseModifier": 0.0,
+    "AttackSpeed": 1.2,
+    "Impact": 25.0,
+    "BaseDamage": {
+        "m_list": [
+            {
+                "Type": 6,
+                "Damage": 36.0
+            }
+        ]
+    },
+    "hitEffects": [
+        "Curse"
+    ]
+}

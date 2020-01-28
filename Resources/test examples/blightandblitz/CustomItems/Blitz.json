@@ -1,0 +1,50 @@
+{
+    "New_ItemID": 3333333,
+    "CloneTarget_ItemID": 2000010,
+    "AssetBundle_Name": "blitz",
+    "VisualPrefabName": "blitz_visual",
+    "ArmorVisualPrefabName": "",
+    "Visual_PosOffset": {
+        "x": -0.03,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "Visual_RotOffset": {
+        "x": 0.0,
+        "y": -90.0,
+        "z": 0.0
+    },
+    "HelmetHideFace": false,
+    "HelmetHideHair": false,
+    "ItemIconName": "BlitzIcon",
+    "Name": "Blitz",
+    "Description": "The Commander said to make this sword fit for Elatt.\n\nInflicts Doomed on enemies.",
+    "Durability": 1000,
+    "BaseValue": 1000,
+    "Weight": 3,
+    "DamageBonuses": [
+        0.0, 
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ManaUseModifier": 0.0,
+    "AttackSpeed": 1.2,
+    "Impact": 25.0,
+    "BaseDamage": {
+        "m_list": [
+            {
+                "Type": 7,
+                "Damage": 36.0
+            }
+        ]
+    },
+    "hitEffects": [
+        "Doom"
+    ]
+}

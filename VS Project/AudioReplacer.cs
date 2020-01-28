@@ -12,23 +12,25 @@ namespace SideLoader
 {
     public class AudioReplacer : MonoBehaviour
     {
-        public SideLoader _base;
+        public static AudioReplacer Instance;
 
-        private AudioSource m_CurrentAudioSource;
+        private AudioSource m_currentMusicScource;
 
         internal void Start()
         {
-            m_CurrentAudioSource = gameObject.GetOrAddComponent<AudioSource>();
-            DontDestroyOnLoad(m_CurrentAudioSource);
+            Instance = this;
+
+            m_currentMusicScource = gameObject.GetOrAddComponent<AudioSource>();
+            DontDestroyOnLoad(m_currentMusicScource);
 
             On.GlobalAudioManager.PlayMusic += PlayMusicHook;
         }
 
         public IEnumerator LoadAudioClips()
         {
-            for (int i = 0; i < _base.FilePaths[ResourceTypes.Audio].Count(); i++)
+            for (int i = 0; i < SL.Instance.FilePaths[ResourceTypes.Audio].Count(); i++)
             {
-                string filePath = @"file://" + Path.GetFullPath(_base.FilePaths[ResourceTypes.Audio][i]);
+                string filePath = @"file://" + Path.GetFullPath(SL.Instance.FilePaths[ResourceTypes.Audio][i]);
                 string fileName = Path.GetFileNameWithoutExtension(filePath);
 
                 AudioClip clip = WWWAudioExtensions.GetAudioClip(new WWW(filePath));
@@ -39,18 +41,18 @@ namespace SideLoader
                     while (clip.loadState != AudioDataLoadState.Loaded)
                         yield return new WaitForSeconds(0.1f);
 
-                    if (_base.AudioClips.ContainsKey(fileName))
+                    if (SL.Instance.AudioClips.ContainsKey(fileName))
                     {
-                        _base.AudioClips[fileName] = clip;
+                        SL.Instance.AudioClips[fileName] = clip;
                     }
                     else
                     {
-                        _base.AudioClips.Add(fileName, clip);
+                        SL.Instance.AudioClips.Add(fileName, clip);
                     }
                 }
             }
 
-            _base.Loading = false;
+            SL.Instance.Loading = false;
             yield return null;
         }
 
@@ -58,7 +60,7 @@ namespace SideLoader
         {
             string songName = _sound.ToString();
 
-            if (_base.AudioClips.ContainsKey(songName)
+            if (SL.Instance.AudioClips.ContainsKey(songName)
                 && At.GetValue(typeof(GlobalAudioManager), self, "s_musicSources") is DictionaryExt<GlobalAudioManager.Sounds, GlobalAudioManager.MusicSource> dict)
             {
                 // set our custom clip to the actual GlobalAudioManager dictionary, so it works with the game systems as expected
@@ -72,7 +74,7 @@ namespace SideLoader
                     dict.Add(_sound, new GlobalAudioManager.MusicSource(component));
                 }
 
-                dict[_sound].Source.clip = _base.AudioClips[_sound.ToString()];
+                dict[_sound].Source.clip = SL.Instance.AudioClips[_sound.ToString()];
 
                 At.SetValue(dict, typeof(GlobalAudioManager), self, "s_musicSources");
 

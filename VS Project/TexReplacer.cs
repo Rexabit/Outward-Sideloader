@@ -11,18 +11,30 @@ namespace SideLoader
 {
     public class TexReplacer : MonoBehaviour
     {
-        public SideLoader _base;
+        public static TexReplacer Instance;
+
+        internal void Awake()
+        {
+            Instance = this;
+        }
+
+        // attempt at trying to make sprites look better. all values based on what nine dots use, at least what uTiny ripper gave me.
+        // so far hasnt made much difference.
+        public static Sprite CreateSprite(Texture2D texture)
+        {
+            texture.filterMode = FilterMode.Bilinear;
+            texture.wrapMode = TextureWrapMode.Repeat;
+            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero, 24.92582f, 1, SpriteMeshType.Tight);
+        }
 
         public IEnumerator ReplaceActiveAssets()
         {
             SideLoader.Log("Replacing Materials..");
             float start = Time.time;
 
-            Texture a = new Texture();
-
             // ============ materials ============
             var list = Resources.FindObjectsOfTypeAll<Material>()
-                        .Where(x => x.mainTexture != null && _base.TextureData.ContainsKey(x.mainTexture.name))
+                        .Where(x => x.mainTexture != null && SL.Instance.TextureData.ContainsKey(x.mainTexture.name))
                         .ToList();
 
             SideLoader.Log(string.Format("Found {0} materials to replace.", list.Count));
@@ -34,7 +46,7 @@ namespace SideLoader
                 i++; SideLoader.Log(string.Format(" - Replacing material {0} of {1}: {2}", i, list.Count, name));
 
                 // set maintexture (diffuse map)
-                m.mainTexture = _base.TextureData[name];
+                m.mainTexture = SL.Instance.TextureData[name];
 
                 // ======= set other shader material layers =======     
                 if (name.EndsWith("_d")) { name = name.Substring(0, name.Length - 2); } // try remove the _d suffix, if its there
@@ -44,10 +56,10 @@ namespace SideLoader
                 {
                     if (entry.Key == "_d") { continue; } // already set MainTex
 
-                    if (_base.TextureData.ContainsKey(name + entry.Key))
+                    if (SL.Instance.TextureData.ContainsKey(name + entry.Key))
                     {
                         SideLoader.Log(" - Setting " + entry.Value + " for " + m.name);
-                        m.SetTexture(entry.Value, _base.TextureData[name + entry.Key]);
+                        m.SetTexture(entry.Value, SL.Instance.TextureData[name + entry.Key]);
                     }
                 }
 
@@ -56,7 +68,7 @@ namespace SideLoader
 
             // ========= sprites =========
 
-            SideLoader.Log("Replacing item icons...");
+            SideLoader.Log("Replacing PrefabManager icons...");
             if (At.GetValue(typeof(ResourcesPrefabManager), null, "ITEM_PREFABS") is Dictionary<string, Item> dict)
             {
                 foreach (Item item in dict.Values
@@ -64,20 +76,21 @@ namespace SideLoader
                     x.ItemID > 2000000 
                     && x.ItemIcon != null 
                     && x.ItemIcon.texture != null 
-                    && _base.TextureData.ContainsKey(x.ItemIcon.texture.name)))
+                    && SL.Instance.TextureData.ContainsKey(x.ItemIcon.texture.name)))
                 {
                     string name = item.ItemIcon.texture.name;
                     SideLoader.Log(string.Format(" - Replacing item icon: {0}", name));
 
-                    Sprite newSprite = Sprite.Create(_base.TextureData[name], new Rect(0, 0, _base.TextureData[name].width, _base.TextureData[name].height), Vector2.zero);
-                    At.SetValue(newSprite, typeof(Item), item, "m_itemIcon");
+                    var tex = SL.Instance.TextureData[name];
+                    var sprite = CreateSprite(tex);
+                    At.SetValue(sprite, typeof(Item), item, "m_itemIcon");
                 }
             }
 
             // ==============================================
 
             SideLoader.Log("Active assets replaced. Time: " + (Time.time - start), 0);
-            _base.Loading = false;
+            SL.Instance.Loading = false;
         }
 
         public static readonly Dictionary<string, string> TextureSuffixes = new Dictionary<string, string>()
@@ -96,19 +109,19 @@ namespace SideLoader
             SideLoader.Log("Reading Texture2D data...");
             float start = Time.time;
 
-            foreach (string filepath in _base.FilePaths[ResourceTypes.Texture])
+            foreach (string filepath in SL.Instance.FilePaths[ResourceTypes.Texture])
             {
                 Texture2D texture2D = LoadPNG(filepath);
 
                 string texname = Path.GetFileNameWithoutExtension(filepath);
-                _base.TextureData.Add(texname, texture2D);
+                SL.Instance.TextureData.Add(texname, texture2D);
 
                 SideLoader.Log(" - Texture loaded: " + texname + ", from " + filepath);
 
                 yield return null;
             }
 
-            _base.Loading = false;
+            SL.Instance.Loading = false;
             SideLoader.Log("Textures loaded. Time: " + (Time.time - start), 0);
         }
 

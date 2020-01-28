@@ -1,0 +1,56 @@
+{
+    "New_ItemID": 2501022,
+    "CloneTarget_ItemID": 3000044,
+    "AssetBundle_Name": "",
+    "VisualPrefabName": "",
+    "ArmorVisualPrefabName": "",
+    "HelmetHideFace": false,
+    "HelmetHideHair": false,
+    "ItemIconName": "GracefulSpearIcon",
+    "Visual_PosOffset": {
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
+    },
+    "Visual_RotOffset": {
+        "x": -1.0,
+        "y": -1.0,
+        "z": -1.0
+    },
+    "Name": "Trailblazer's Attire",
+    "Description": "",
+    "Durability": 250,
+    "BaseValue": 485,
+    "Weight": 6.0,
+    "DamageBonuses": [
+        0.0,
+        0.0,
+        15.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "DamageResistances": [
+        16.0,
+        0.0,
+        15.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "PhysProtection": 0.0,
+    "ImpactResistance": 9.0,
+    "ManaUseModifier": 0.0,
+    "StaminaUsePenalty": -10.0,
+    "MovementPenalty": 0.0,
+    "HealthBonus": 0.0,
+    "PouchBonus": 4.0,
+    "ColdProtection": 8.0,
+    "HeatProtection": 8.0
+}

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Steam\steamapps\common\Outward\Mods\</OutputPath>
+    <OutputPath>.\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -78,6 +78,8 @@
   <ItemGroup>
     <Compile Include="AssetBundleLoader.cs" />
     <Compile Include="AudioReplacer.cs" />
+    <Compile Include="CustomCharacters.cs" />
+    <Compile Include="CustomSkills.cs" />
     <Compile Include="TexReplacer.cs" />
     <Compile Include="CustomItems.cs" />
     <Compile Include="SideLoader.cs" />

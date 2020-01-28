@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 2865294367
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: blitz
+      Dependencies: {}

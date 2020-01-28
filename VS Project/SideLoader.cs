@@ -15,6 +15,7 @@ namespace SideLoader
 {
     public class SL : PartialityMod // the mod loader, and public class which contains the static SL.Instance (for accessing loaded assets outside this mod)
     {
+        public static SL BaseInstance;
         public static SideLoader Instance;
 
         public GameObject obj;
@@ -35,8 +36,9 @@ namespace SideLoader
             obj = new GameObject(ID);
             GameObject.DontDestroyOnLoad(obj);
 
+            BaseInstance = this;
             Instance = obj.AddComponent<SideLoader>();
-            Instance._base = this;
+            //Instance._base = this;
         }
 
         public override void OnDisable()
@@ -47,16 +49,10 @@ namespace SideLoader
 
     public class SideLoader : MonoBehaviour // the actual SideLoader script (for internal use only). For external usage, use SL.Instance
     {
-        public SL _base;
+        //public SL _base;
 
         public int InitDone = -1;    // -1 is unstarted, 0 is initializing, 1 is done
         public bool Loading = false; // for coroutines
-
-        // components
-        public AssetBundleLoader bundleLoader;
-        public TexReplacer TexReplacer;
-        public CustomItems CustomItems;
-        public AudioReplacer AudioReplacer;
 
         // scene change flag for replacing materials after game loads them
         private string CurrentScene = "";
@@ -72,22 +68,28 @@ namespace SideLoader
             ResourceTypes.AssetBundle,
             ResourceTypes.CustomItems,
             ResourceTypes.Audio,
-        };       
+        };
 
-        // ========== THIS DICTIONARY CONTAINS ALL FILEPATHS FOR ALL RESOURCETYPES ==========
-        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>(); // Key: ResourceType, Value: list of file paths for that type        
+        // ALL FILEPATHS. Key: ResourceType, Value: list of file paths for that type    
+        public Dictionary<string, List<string>> FilePaths = new Dictionary<string, List<string>>();
 
-        // ====================== INDIVIDUAL DICTIONARIES FOR ACTUAL RESOURCE ASSETS ===============
-        // textures
-        public Dictionary<string, Texture2D> TextureData = new Dictionary<string, Texture2D>();  // Key: File Name, Value: data of texture files
-        // asset bundles
-        public Dictionary<string, AssetBundle> LoadedBundles = new Dictionary<string, AssetBundle>(); //  Key: bundle Name, Value: actual AssetBundle
-        // custom items
-        public Dictionary<int, Item> LoadedCustomItems = new Dictionary<int, Item>(); // Key: Item ID, Value: actual Item
-        // audio clips
-        public Dictionary<string, AudioClip> AudioClips = new Dictionary<string, AudioClip>(); // Key: audio file name, Value: audioClip
+        // Textures. Key: File Name, Value: texture2D
+        public Dictionary<string, Texture2D> TextureData = new Dictionary<string, Texture2D>();
+        // AssetBundles. Key: bundle name, Value: actual AssetBundle
+        public Dictionary<string, AssetBundle> LoadedBundles = new Dictionary<string, AssetBundle>();
+        // Custom items. Key: Item ID, Value: actual Item
+        public Dictionary<int, Item> LoadedCustomItems = new Dictionary<int, Item>();
+        // Key: audio file name, Value: audioClip
+        public Dictionary<string, AudioClip> AudioClips = new Dictionary<string, AudioClip>();
 
-        // ===============================================================================================
+        // Legacy component references. The new system is that everything has a public static Instance. Leaving these to not break old mods.
+        public TexReplacer TexReplacer;
+        public CustomItems CustomItems;
+
+        public bool IsInitDone()
+        {
+            if (InitDone > 0) { return true; } else { return false; }
+        }
 
         internal void Update()
         {
@@ -117,19 +119,24 @@ namespace SideLoader
 
         public void ReplaceActiveAssets()
         {
-            StartCoroutine(TexReplacer.ReplaceActiveAssets());
+            StartCoroutine(TexReplacer.Instance.ReplaceActiveAssets());
         }
 
         private IEnumerator Init()
         {
-            Log("Version " + _base.Version + " starting...", 0);
+            Log("Version " + SL.BaseInstance.Version + " starting...", 0);
 
             // Add Components
-            bundleLoader = _base.obj.AddComponent(new AssetBundleLoader { _base = this });
-            TexReplacer = _base.obj.AddComponent(new TexReplacer { _base = this });
-            CustomItems = _base.obj.AddComponent(new CustomItems { _base = this });
-            AudioReplacer = _base.obj.AddComponent(new AudioReplacer { _base = this });
-            //SceneLoader = _base.obj.AddComponent(new SceneLoader { _base = this });
+            this.gameObject.AddComponent<AssetBundleLoader>();
+            this.gameObject.AddComponent<TexReplacer>();
+            this.gameObject.AddComponent<CustomItems>();
+            this.gameObject.AddComponent<AudioReplacer>();
+            this.gameObject.AddComponent<CustomSkills>();
+            this.gameObject.AddComponent<CustomCharacters>();
+
+            // legacy references
+            CustomItems = this.gameObject.GetComponent<CustomItems>();
+            TexReplacer = this.gameObject.GetComponent<TexReplacer>();
 
             // read folders, store all file paths in FilePaths dictionary
             CheckFolders();
@@ -139,29 +146,29 @@ namespace SideLoader
 
             // load texture changes
             Loading = true;
-            StartCoroutine(TexReplacer.LoadTextures());
+            StartCoroutine(TexReplacer.Instance.LoadTextures());
             while (Loading) { yield return null; } // wait for loading callback to be set to false
 
             // load asset bundles
             Loading = true;
-            StartCoroutine(bundleLoader.LoadAssetBundles());
+            StartCoroutine(AssetBundleLoader.Instance.LoadAssetBundles());
             while (Loading) { yield return null; }
 
             // load custom items
             Loading = true;
-            StartCoroutine(CustomItems.LoadItems());
+            StartCoroutine(CustomItems.Instance.LoadItems());
             while (Loading) { yield return null; }
 
             // load audio filepaths
             Loading = true;
-            StartCoroutine(AudioReplacer.LoadAudioClips());
+            StartCoroutine(AudioReplacer.Instance.LoadAudioClips());
             while (Loading) { yield return null; }
 
             // load something else...
 
             // Check currently loaded assets and replace what we can
             Loading = true;
-            StartCoroutine(TexReplacer.ReplaceActiveAssets());
+            StartCoroutine(TexReplacer.Instance.ReplaceActiveAssets());
             while (Loading) { yield return null; }
 
             Log("Finished initialization.", 0);

@@ -13,13 +13,18 @@ namespace SideLoader
 {
     public class CustomItems : MonoBehaviour
     {
-        public SideLoader _base;
+        public static CustomItems Instance;
+
+        internal void Awake()
+        {
+            Instance = this;
+        }
 
         public IEnumerator LoadItems()
         {
             SideLoader.Log("Loading custom items...");
 
-            foreach (string path in _base.FilePaths[ResourceTypes.CustomItems])
+            foreach (string path in SL.Instance.FilePaths[ResourceTypes.CustomItems])
             {
                 string json = File.ReadAllText(path);
 
@@ -31,7 +36,7 @@ namespace SideLoader
                     Item target = ResourcesPrefabManager.Instance.GetItemPrefab(template.CloneTarget_ItemID);
 
                     ApplyCustomItem(template);
-                    _base.LoadedCustomItems.Add(template.New_ItemID, ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID));
+                    SL.Instance.LoadedCustomItems.Add(template.New_ItemID, ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID));
 
                     if (target is Weapon)
                     {
@@ -40,6 +45,11 @@ namespace SideLoader
                     else if (target is Equipment)
                     {
                         SetEquipmentStats(JsonUtility.FromJson<CustomEquipment>(json));
+                    }
+
+                    if (target is Skill)
+                    {
+                        SetSkillStats(JsonUtility.FromJson<CustomSkill>(json));
                     }
                 }
                 catch (Exception e)
@@ -53,7 +63,7 @@ namespace SideLoader
             SideLoader.Log("Loaded custom items", 0);
 
             // custom recipes
-            foreach (string path in Directory.GetDirectories(_base.loadDir))
+            foreach (string path in Directory.GetDirectories(SL.Instance.loadDir))
             {
                 if (!Directory.Exists(path + @"\CustomItems\Recipes"))
                 {
@@ -72,9 +82,12 @@ namespace SideLoader
                 }
             }
 
-            _base.Loading = false;
+            SL.Instance.Loading = false;
             SideLoader.Log("Loaded custom recipes", 0);
         }
+
+
+        // ============ Class Setups ============== //
 
         public void ApplyCustomItem(CustomItem template)
         {
@@ -91,9 +104,9 @@ namespace SideLoader
                 SetNameAndDesc(item, name, desc);
 
                 // set item icon
-                if (!string.IsNullOrEmpty(template.ItemIconName) && _base.TextureData.ContainsKey(template.ItemIconName))
+                if (!string.IsNullOrEmpty(template.ItemIconName) && SL.Instance.TextureData.ContainsKey(template.ItemIconName))
                 {
-                    Texture2D icon = _base.TextureData[template.ItemIconName];
+                    Texture2D icon = SL.Instance.TextureData[template.ItemIconName];
                     if (icon)
                     {
                         SetItemIcon(item, icon);
@@ -105,8 +118,8 @@ namespace SideLoader
 
                 // check if AssetBundle name is defined
                 if (!string.IsNullOrEmpty(template.AssetBundle_Name) 
-                    && _base.LoadedBundles.ContainsKey(template.AssetBundle_Name)
-                    && _base.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
+                    && SL.Instance.LoadedBundles.ContainsKey(template.AssetBundle_Name)
+                    && SL.Instance.LoadedBundles[template.AssetBundle_Name] is AssetBundle bundle)
                 {
                     // set normal visual prefab
                     if (!string.IsNullOrEmpty(template.VisualPrefabName) 
@@ -164,7 +177,7 @@ namespace SideLoader
                     foreach (string suffix in TexReplacer.TextureSuffixes.Keys)
                     {
                         string search = "tex_itm_" + template.New_ItemID + "_" + template.Name + suffix;
-                        if (_base.TextureData.ContainsKey(search))
+                        if (SL.Instance.TextureData.ContainsKey(search))
                         {
                             customDefined = true;
                             break;
@@ -208,7 +221,7 @@ namespace SideLoader
 
                     foreach (string suffix in TexReplacer.TextureSuffixes.Keys)
                     {
-                        if (_base.TextureData.ContainsKey("tex_cha_" + template.New_ItemID + "_" + template.Name + suffix))
+                        if (SL.Instance.TextureData.ContainsKey("tex_cha_" + template.New_ItemID + "_" + template.Name + suffix))
                         {
                             customDefined = true;
                             break;
@@ -250,7 +263,10 @@ namespace SideLoader
         public Item CloneItem(Item origItem, int newID)
         {
             // clone it, set inactive, and dont destroy on load
+            origItem.gameObject.SetActive(false);
             GameObject newItem = Instantiate(origItem.gameObject);
+            origItem.gameObject.SetActive(true);
+
             newItem.SetActive(false);
             DontDestroyOnLoad(newItem);
 
@@ -300,7 +316,7 @@ namespace SideLoader
 
         public void SetItemIcon(Item item, Texture2D icon)
         {
-            Sprite sprite = Sprite.Create(icon, new Rect(0, 0, icon.width, icon.height), Vector2.zero);
+            var sprite = TexReplacer.CreateSprite(icon);            
             At.SetValue(sprite, typeof(Item), item, "m_itemIcon");
         }
 
@@ -404,7 +420,7 @@ namespace SideLoader
             if (item.GetComponent<ItemStats>() is ItemStats stats)
             {
                 stats.MaxDurability = maxDurability;
-                At.SetValue(baseValue, typeof(ItemStats), stats, "m_baseValue"); // price  
+                At.SetValue(baseValue, typeof(ItemStats), stats, "mSL.InstanceValue"); // price  
                 At.SetValue(weight, typeof(ItemStats), stats, "m_rawWeight");    // weight
 
                 item.SetStatScript(stats);
@@ -492,7 +508,23 @@ namespace SideLoader
             }
         }
       
+        // set fields for skills
 
+        public void SetSkillStats(CustomSkill template)
+        {
+            if (ResourcesPrefabManager.Instance.GetItemPrefab(template.New_ItemID) is Skill skill)
+            {
+                skill.Cooldown = template.Cooldown;
+                skill.ManaCost = template.ManaCost;
+                skill.StaminaCost = template.StaminaCost;
+
+                // set skill tree icon
+                if (SL.Instance.TextureData.ContainsKey(template.SkillTreeIconName))
+                {
+                    CustomSkills.SetSkillSmallIcon(template.New_ItemID, template.SkillTreeIconName);
+                }
+            }
+        }
 
         // custom recipes
 
@@ -543,57 +575,6 @@ namespace SideLoader
                 }
             }
         }
-
-        // SetupSkill is an example of how to make a custom Passive skill with AffectStat components. leaving for now.
-
-        //private GameObject SetupSkill()
-        //{
-        //    try
-        //    {
-        //        // create a new GameObject
-        //        GameObject mySkill = new GameObject("TestPassiveSkill");
-        //        DontDestroyOnLoad(mySkill);
-        //        mySkill.SetActive(false);
-
-        //        // basic item initialization (bare minimum)
-        //        PassiveSkill skillComponent = mySkill.AddComponent(new PassiveSkill()
-        //        {
-        //            ItemID = 9996666,
-        //        });
-        //        SL.Instance.CustomItems.SetNameAndDesc(skillComponent as Item, "TestSkill", "Test.");
-
-        //        // create the Effects child
-        //        GameObject fxChild = new GameObject("Effects");
-        //        fxChild.transform.parent = mySkill.transform;
-
-        //        // AffectStat basic init
-        //        AffectStat affectStat = fxChild.AddComponent(new AffectStat()
-        //        {
-        //            AffectedStat = new TagSourceSelector(TagSourceManager.Instance.GetTag("96")), // trial and error to find these
-        //            Value = 50,
-        //            Duration = -1,
-        //            Tags = new TagSourceSelector[0],
-        //            RequireRegistration = false,
-        //        });
-
-        //        // set EffectFamily Type. This is important. See "EffectType.Families" static dictionary
-        //        At.SetValue(new EffectTypeSelector() { SelectedEffectTypeName = "None" }, typeof(Effect), affectStat, "m_effectType");
-
-        //        // create the list of Effect comps to link up to the actual PassiveSkill. Each "Effect" class component goes on this list.
-        //        List<Effect> effects = new List<Effect>() { affectStat };
-
-        //        // set the list of Effects to the skill so they are actually registered
-        //        At.SetValue(effects, typeof(PassiveSkill), skillComponent, "m_passiveEffects");
-
-        //        return mySkill;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        SideLoader.Log(string.Format("Error with SetupSkill! Error: {0}, Stack trace: {1}", e.Message, e.StackTrace), 1);
-
-        //        return null;
-        //    }
-        //}
     }
 
     public class CustomItem
@@ -659,6 +640,14 @@ namespace SideLoader
 
         // add status effect buildups
         public List<string> hitEffects = new List<string>() { "EffectName1", "EffectName2" };
+    }
+
+    public class CustomSkill : CustomItem
+    {
+        public string SkillTreeIconName;
+        public float Cooldown;
+        public float StaminaCost;
+        public float ManaCost;
     }
 
     public class CustomRecipe
