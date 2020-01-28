@@ -519,7 +519,7 @@ namespace SideLoader
                 skill.StaminaCost = template.StaminaCost;
 
                 // set skill tree icon
-                if (SL.Instance.TextureData.ContainsKey(template.SkillTreeIconName))
+                if (!string.IsNullOrEmpty(template.SkillTreeIconName) && SL.Instance.TextureData.ContainsKey(template.SkillTreeIconName))
                 {
                     CustomSkills.SetSkillSmallIcon(template.New_ItemID, template.SkillTreeIconName);
                 }
