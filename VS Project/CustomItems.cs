@@ -186,15 +186,16 @@ namespace SideLoader
 
                     if (customDefined)
                     {
-                        Transform newVisuals = Instantiate(item.VisualPrefab);
-                        item.VisualPrefab = newVisuals;
-                        DontDestroyOnLoad(newVisuals);
-
-                        foreach (Transform child in newVisuals)
+                        if (item is Weapon && (item as Weapon).Type == Weapon.WeaponType.Bow)
                         {
-                            if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
+                            // bows are a unique case
+                            Transform newVisuals = Instantiate(item.VisualPrefab);
+                            item.VisualPrefab = newVisuals;
+                            DontDestroyOnLoad(newVisuals);
+
+                            if (newVisuals.GetComponentInChildren<SkinnedMeshRenderer>() is SkinnedMeshRenderer mesh)
                             {
-                                SideLoader.Log("Overwriting ItemVisuals for " + item.Name);
+                                SideLoader.Log("Apply custom ItemVisuals for " + item.Name);
 
                                 string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
 
@@ -204,8 +205,33 @@ namespace SideLoader
                                 mesh.material = m;
                                 OverwriteMaterials(m, newMatName);
                             }
-                            else { continue; }
-                            break;
+                        }
+                        else
+                        {
+                            Transform newVisuals = Instantiate(item.VisualPrefab);
+                            item.VisualPrefab = newVisuals;
+                            DontDestroyOnLoad(newVisuals);
+
+                            foreach (Transform child in newVisuals)
+                            {
+                                if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
+                                {
+                                    SideLoader.Log("Apply custom ItemVisuals for " + item.Name);
+
+                                    string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
+
+                                    Material m = Instantiate(mesh.material);
+                                    DontDestroyOnLoad(m);
+
+                                    mesh.material = m;
+                                    OverwriteMaterials(m, newMatName);
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                                break;
+                            }
                         }
                     }
                     else
