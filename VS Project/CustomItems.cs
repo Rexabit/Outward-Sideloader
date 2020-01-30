@@ -186,16 +186,17 @@ namespace SideLoader
 
                     if (customDefined)
                     {
+                        Transform newVisuals = Instantiate(item.VisualPrefab);
+                        newVisuals.gameObject.SetActive(false);
+                        item.VisualPrefab = newVisuals;
+                        DontDestroyOnLoad(newVisuals);
+
+                        // bows are a unique case
                         if (item is Weapon && (item as Weapon).Type == Weapon.WeaponType.Bow)
                         {
-                            // bows are a unique case
-                            Transform newVisuals = Instantiate(item.VisualPrefab);
-                            item.VisualPrefab = newVisuals;
-                            DontDestroyOnLoad(newVisuals);
-
                             if (newVisuals.GetComponentInChildren<SkinnedMeshRenderer>() is SkinnedMeshRenderer mesh)
                             {
-                                SideLoader.Log("Apply custom ItemVisuals for " + item.Name);
+                                SideLoader.Log("Apply custom Bow ItemVisuals for " + item.Name);
 
                                 string newMatName = "tex_itm_" + template.New_ItemID + "_" + template.Name;
 
@@ -208,10 +209,6 @@ namespace SideLoader
                         }
                         else
                         {
-                            Transform newVisuals = Instantiate(item.VisualPrefab);
-                            item.VisualPrefab = newVisuals;
-                            DontDestroyOnLoad(newVisuals);
-
                             foreach (Transform child in newVisuals)
                             {
                                 if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>() is MeshRenderer mesh)
@@ -349,26 +346,17 @@ namespace SideLoader
         public void SetItemVisualPrefab(Item item, Transform origVisuals, Transform newVisuals, Vector3 position_offset, Vector3 rotation_offset, bool SetSpecialPrefab = false, bool HelmetHideFace = false, bool HelmetHideHair = false)
         {
             // clone the visual prefab so we can modify it without affecting the original item
-            Transform clone = Instantiate(origVisuals);
+            //origVisuals.gameObject.SetActive(false);
+            //Transform clone = Instantiate(origVisuals);
 
-            clone.gameObject.SetActive(false);
-            DontDestroyOnLoad(clone);
-            
-            if (SetSpecialPrefab)
-            {
-                item.SpecialVisualPrefabDefault = clone;
-            }
-            else
-            {
-                item.VisualPrefab = clone;
-            }
+            //DontDestroyOnLoad(clone);
+            //clone.gameObject.SetActive(false);
 
             Vector3 origPos = Vector3.zero;
             Vector3 origRot = Vector3.zero;
 
             // set up our new model
             GameObject newModel = Instantiate(newVisuals.gameObject);
-            newModel.transform.parent = clone.transform;
 
             // if we're setting an Armor Special (worn armor) prefab, handle that logic
             if (item is Armor && SetSpecialPrefab)
@@ -391,7 +379,7 @@ namespace SideLoader
             }
             else // setting a normal prefab. disable the original mesh first.
             { 
-                foreach (Transform child in clone)
+                foreach (Transform child in newVisuals)
                 {
                     // only the actual item visuals will have both of these components. this will not disable particle fx or anything else.
                     if (child.GetComponent<BoxCollider>() && child.GetComponent<MeshRenderer>())
@@ -415,6 +403,16 @@ namespace SideLoader
 
             if (rotation_offset == new Vector3(-1, -1, -1)) { newModel.transform.rotation = Quaternion.Euler(origRot); }
             else { newModel.transform.rotation = Quaternion.Euler(rotation_offset); }
+
+
+            if (SetSpecialPrefab)
+            {
+                item.SpecialVisualPrefabDefault = newModel.transform;
+            }
+            else
+            {
+                item.VisualPrefab = newModel.transform;
+            }
         }
 
         private void OverwriteMaterials(Material material, string newName)
