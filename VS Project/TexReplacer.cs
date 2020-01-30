@@ -114,7 +114,15 @@ namespace SideLoader
                 Texture2D texture2D = LoadPNG(filepath);
 
                 string texname = Path.GetFileNameWithoutExtension(filepath);
-                SL.Instance.TextureData.Add(texname, texture2D);
+                if (SL.Instance.TextureData.ContainsKey(texname))
+                {
+                    SideLoader.Log("Adding " + texname + " to texture data dictionary, but a key with this name already exists! Overwriting...");
+                    SL.Instance.TextureData[texname] = texture2D;
+                }
+                else
+                {
+                    SL.Instance.TextureData.Add(texname, texture2D);
+                }
 
                 SideLoader.Log(" - Texture loaded: " + texname + ", from " + filepath);
 
