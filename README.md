@@ -12,10 +12,13 @@ The Wiki for this repository contains in-depth guides on all aspects of using th
 
 ## How To Install ##
 
+* Download and setup Partiality (link above)
 * Unzip the "SideLoader.zip" file directly to your Outward installation directory.
-* For Partiality users, enable the mod in Partiality, hit "Apply Mods" and "Yes"
-* For BepInEx, move "Outward\Mods\SideLoader.dll" to "Outward\BepInEx\plugins\\", and install the BepInEx Partiality wrapper.
+* Enable the mod in Partiality, hit "Apply Mods" and "Yes"
 * That's it! View the [Wiki](https://github.com/sinaioutlander/Outward-Sideloader/wiki) for further instructions.
+
+Notes: 
+* It is not recommended to use this mod with the BepInEx Partiality wrapper currently. Please wait until the next Outward update.
 
 ## Examples and Resources ##
 
