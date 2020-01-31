@@ -520,6 +520,11 @@ namespace SideLoader
                 hiteffects.transform.parent = item.transform;
                 foreach (string effect in template.hitEffects)
                 {
+                    if (string.IsNullOrEmpty(effect))
+                    {
+                        continue;
+                    }
+
                     if (ResourcesPrefabManager.Instance.GetStatusEffectPrefab(effect) is StatusEffect status)
                     {
                         hiteffects.AddComponent(new AddStatusEffectBuildUp
@@ -650,20 +655,10 @@ namespace SideLoader
         // WeaponStats
         public float AttackSpeed;               
         public float Impact;
-        public DamageList BaseDamage = new DamageList(
-            new DamageType[]
-            {
-                new DamageType(DamageType.Types.Physical, 0),
-                new DamageType(DamageType.Types.Ethereal, 0),
-                new DamageType(DamageType.Types.Decay, 0),
-                new DamageType(DamageType.Types.Electric, 0),
-                new DamageType(DamageType.Types.Frost, 0),
-                new DamageType(DamageType.Types.Fire, 0),
-            }
-        );
+        public DamageList BaseDamage = new DamageList();
 
         // add status effect buildups
-        public List<string> hitEffects = new List<string>() { "EffectName1", "EffectName2" };
+        public List<string> hitEffects = new List<string>();
     }
 
     public class CustomSkill : CustomItem
