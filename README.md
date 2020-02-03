@@ -13,7 +13,7 @@ The Wiki for this repository contains in-depth guides on all aspects of using th
 ## How To Install ##
 
 * Download and setup [Partiality](https://outward.gamepedia.com/Installing_Mods#Partiality)
-* [Download this repository](https://github.com/sinaioutlander/Outward-Sideloader/archive/master.zip)
+* [Download this repository](https://github.com/sinaioutlander/Outward-Sideloader/archive/master.zip) (or Clone it)
 * Unzip the "SideLoader.zip" file directly to your Outward installation directory.
 * Enable the mod in Partiality, hit "Apply Mods" and "Yes"
 * That's it! View the [Wiki](https://github.com/sinaioutlander/Outward-Sideloader/wiki) if you want to know how to develop SideLoader packs and use it as a modding tool.
