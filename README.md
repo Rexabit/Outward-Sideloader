@@ -25,7 +25,7 @@ Notes:
 
 * First, download this repository (download to zip, or clone)
 * Follow the instructions above to install the SideLoader correctly
-* In the main download folder, the "Resources" folder has some useful files such as an empty "SL Pack" (folder structure), Custom Weapon example, some blank icon templates, the human model rig for Outward, and probably more stuff in the future. 
+* In the main download folder, the "Resources" folder has some useful files such as an empty "SL Pack" (example folder), Custom Equipment examples, some blank icon templates, the human model rig for Outward, and other stuff. 
 
 ## Conclusion ##
 
