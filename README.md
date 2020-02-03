@@ -23,6 +23,6 @@ The Wiki for this repository contains in-depth guides on all aspects of using th
 * The "Resources" folder of this repository contains many useful files.
 * There is an empty "SL Pack" (example folder), Custom Equipment examples, some blank icon templates, the human model rig for Outward, and other stuff. 
 
-## Got questions? want to contribute?
+## Got questions? Want to contribute?
 
 Feel free to contact me in the [Outward Discord](discord.gg/outward), I'm Sinai#4637.
