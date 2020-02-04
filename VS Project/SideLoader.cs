@@ -6,8 +6,6 @@ using System.Collections;
 using Partiality.Modloader;
 using UnityEngine;
 using System.IO;
-//using OModAPI;
-using SinAPI;
 
 // Credits to Elec0 for the initial framework
 

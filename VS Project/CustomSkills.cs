@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using SinAPI;
-
 // this class just contains a few helper functions for setting up skills. Custom Skills are still mostly defined from the CustomItems class.
 
 // most importantly at the moment, this class contains helpers for setting up Skill Trees.

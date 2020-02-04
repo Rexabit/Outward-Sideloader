@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Steam\steamapps\common\Outward\Mods\</OutputPath>
+    <OutputPath>.\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -56,10 +56,6 @@
       <HintPath>..\..\..\..\Steam\steamapps\common\Outward\Outward_Data\Managed\Rewired_Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SinAPI">
-      <HintPath>..\..\..\..\Steam\steamapps\common\Outward\Outward_Data\Managed\SinAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -85,6 +81,7 @@
     <Compile Include="SideLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatHelpers.cs" />
+    <Compile Include="utils\SinAPI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

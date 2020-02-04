@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using SinAPI;
-//using OModAPI;
 using System.IO;
 
 namespace SideLoader
