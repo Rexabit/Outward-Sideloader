@@ -13,7 +13,7 @@ namespace SideLoader
     {
         public static CustomCharacters Instance;
 
-        public GameObject BasicAIPrefab = null;
+        public static GameObject BasicAIPrefab = null;
 
         internal void Awake()
         {
@@ -22,10 +22,10 @@ namespace SideLoader
 			SetupBasicAIPrefab();
 		}
 
-		public static GameObject InstantiatePlayerPrefab(Vector3 _position, string _UID, int _viewID = -1)
+		public static GameObject InstantiatePlayerPrefab(Vector3 _position, string _UID)
 		{
 			// setup Player Prefab
-			var playerPrefab = PhotonNetwork.Instantiate("_characters/NewPlayerPrefab", _position, Quaternion.identity, 0, new object[]
+			var playerPrefab = PhotonNetwork.InstantiateSceneObject("_characters/NewPlayerPrefab", _position, Quaternion.identity, 0, new object[]
 			{
 				(int)CharacterManager.CharacterInstantiationTypes.Temporary,
 				"NewPlayerPrefab",
@@ -34,8 +34,6 @@ namespace SideLoader
 			});
 
 			playerPrefab.SetActive(false);
-
-			playerPrefab.GetComponent<PhotonView>().viewID = (_viewID == -1 ? PhotonNetwork.AllocateSceneViewID() : _viewID);
 
 			return playerPrefab;
 		}
@@ -48,7 +46,13 @@ namespace SideLoader
 			_char.gameObject.AddComponent<EditorCharacterAILoadAI>();
 
 			// add our basic AIStatesPrefab to a CharacterAI component. This is the prefab set up by SetupBasicAIPrefab(), below.
-			CharacterAI charAI = _char.gameObject.AddComponent(new CharacterAI { AIStatesPrefab = Instantiate(Instance.BasicAIPrefab).GetComponent<AIRoot>() });
+			CharacterAI charAI = _char.gameObject.AddComponent(new CharacterAI { AIStatesPrefab = BasicAIPrefab.GetComponent<AIRoot>() });
+
+			// remove unwanted components
+			if (_char.GetComponent<NavMeshObstacle>() is NavMeshObstacle navObstacle)
+			{
+				Destroy(navObstacle);
+			}
 
 			// initialize the AI States (not entirely necessary, but helpful if we want to do something with the AI immediately after)
 			At.Call(charAI, "GetAIStates", new object[0]);
@@ -155,8 +159,10 @@ namespace SideLoader
 			var combatEnd = new GameObject("EndCombatEffects").AddComponent(new AIESwitchState { ToState = wanderState });
 			combatEnd.transform.parent = combatState.transform;
 
-			BasicAIPrefab = _AIStatesPrefab.gameObject;
+			_AIStatesPrefab.gameObject.SetActive(false);
+			BasicAIPrefab = Instantiate(_AIStatesPrefab.gameObject);
 			DontDestroyOnLoad(BasicAIPrefab);
+			BasicAIPrefab.SetActive(false);
 		}
 	}
 }
