@@ -443,7 +443,7 @@ namespace SideLoader
             if (item.GetComponent<ItemStats>() is ItemStats stats)
             {
                 stats.MaxDurability = maxDurability;
-                At.SetValue(baseValue, typeof(ItemStats), stats, "mSL.InstanceValue"); // price  
+                At.SetValue(baseValue, typeof(ItemStats), stats, "m_baseValue"); // price  
                 At.SetValue(weight, typeof(ItemStats), stats, "m_rawWeight");    // weight
 
                 item.SetStatScript(stats);
